@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(mkdir -p backend)",
+      "Bash(npm init *)",
+      "Bash(npm pkg *)",
+      "Bash(npm install *)",
+      "Bash(node src/server.js)",
+      "Bash(curl -s http://localhost:4000/v1/today)",
+      "Bash(kill %1)",
+      "Bash(curl -s \"http://localhost:4000/v1/calendar?month=2026-06\")",
+      "Bash(curl -s \"http://localhost:4000/v1/practices/om-namah-shivaya-japa\")",
+      "Bash(curl -s \"http://localhost:4000/v1/search?q=house\")",
+      "Bash(npx --yes create-expo-app@latest app --template blank-typescript)",
+      "Bash(npx expo *)",
+      "Bash(npx tsc *)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

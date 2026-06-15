@@ -1,0 +1,5 @@
+node_modules/
+mantrify.db
+mantrify.db-*
+npm-debug.*
+.DS_Store

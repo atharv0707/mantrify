@@ -1,0 +1,570 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@500;600&display=swap');
+
+  :root{
+    --paper:#FBF6EC;        /* warm pre-dawn paper */
+    --paper-2:#F3EADB;
+    --card:#FFFDF8;
+    --ink:#241C13;          /* deep warm ink */
+    --muted:#8A7C6A;
+    --faint:#B6A893;
+    --line:rgba(36,28,19,.10);
+    --saffron:#E07A1F;      /* marigold action accent */
+    --saffron-deep:#C25E0C;
+    --indigo:#1d2545;       /* brahma-muhurta sky */
+    --peacock:#0f4b54;
+    --brass:#B6862C;        /* reserved for Plus / special */
+    --glow:#FFC25E;
+    --ok:#3F8F6A;
+    --radius:20px;
+    --shadow:0 18px 50px -22px rgba(36,28,19,.45);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 50% -10%, #FCEBCB 0%, var(--paper) 42%, var(--paper-2) 100%);
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:34px 16px 56px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .intro{max-width:420px;text-align:center;margin-bottom:24px}
+  .brandmark{display:inline-flex;align-items:center;gap:9px;font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:.2px}
+  .intro p{color:var(--muted);font-size:13.5px;line-height:1.55;margin:8px 0 0}
+
+  /* ---------- phone shell ---------- */
+  .phone{
+    width:min(92vw,392px);
+    height:812px;max-height:88vh;
+    background:var(--paper);
+    border-radius:46px;
+    padding:11px;
+    box-shadow:var(--shadow), 0 0 0 1px rgba(36,28,19,.06);
+    position:relative;
+  }
+  .screen{
+    position:absolute;inset:11px;
+    border-radius:36px;overflow:hidden;
+    background:var(--paper);
+    display:flex;flex-direction:column;
+  }
+  .statusbar{height:44px;display:flex;align-items:flex-end;justify-content:space-between;
+    padding:0 26px 6px;font-size:12.5px;font-weight:600;color:var(--ink);flex:none}
+  .statusbar .dots{display:flex;gap:5px;align-items:center}
+  .statusbar .bar{width:17px;height:11px;border:1.4px solid var(--ink);border-radius:3px;opacity:.85}
+
+  .views{flex:1;position:relative;overflow:hidden}
+  .view{position:absolute;inset:0;overflow-y:auto;padding:6px 20px 96px;display:none;scrollbar-width:none}
+  .view::-webkit-scrollbar{display:none}
+  .view.active{display:block;animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.view.active{animation:none}}
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--saffron-deep)}
+  .h-serif{font-family:'Fraunces',serif;font-weight:600;letter-spacing:.1px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 0 14px}
+  .topbar .name{display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:600;font-size:18px}
+  .av{width:34px;height:34px;border-radius:50%;background:
+      radial-gradient(circle at 35% 30%, #2c3766, var(--indigo));display:grid;place-items:center;color:#f3d9a6;font-weight:700;font-size:13px;cursor:pointer}
+  .section-h{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 12px}
+  .section-h h3{font-family:'Fraunces',serif;font-weight:600;font-size:16.5px;margin:0}
+  .section-h a{font-size:12px;color:var(--saffron-deep);text-decoration:none;font-weight:600}
+
+  .flame{filter:drop-shadow(0 0 6px rgba(255,170,60,.65))}
+
+  /* card */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;cursor:pointer;
+    transition:transform .14s ease, box-shadow .14s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 12px 28px -18px rgba(36,28,19,.4)}
+  .card:focus-visible{outline:2.5px solid var(--saffron);outline-offset:2px}
+  .row-card{display:flex;align-items:center;gap:13px}
+  .glyph{width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:21px;
+    background:linear-gradient(150deg,#FCEACB,#F6D9A8);color:var(--saffron-deep)}
+  .glyph.indigo{background:linear-gradient(150deg,#2a3563,var(--indigo));color:#f4dba7}
+  .glyph.peacock{background:linear-gradient(150deg,#16636f,var(--peacock));color:#cdeef0}
+  .glyph.rose{background:linear-gradient(150deg,#f3c9c0,#e09e93);color:#8a392c}
+  .card .ttl{font-weight:600;font-size:14.5px;line-height:1.25}
+  .card .sub{font-size:12px;color:var(--muted);margin-top:3px}
+  .lock{margin-left:auto;color:var(--brass);font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px}
+
+  /* hero (Today) */
+  .hero{position:relative;border-radius:24px;overflow:hidden;padding:20px 18px 18px;color:#fdf3df;
+    background:linear-gradient(155deg,#222c54 0%, #1a2444 45%, #123f49 100%);cursor:pointer}
+  .hero .halo{position:absolute;right:-30px;top:-30px;width:170px;height:170px;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,193,94,.55), rgba(255,193,94,0) 70%)}
+  .hero .eb{color:#f6c879;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+  .hero h2{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin:8px 0 6px;line-height:1.15}
+  .hero p{font-size:12.5px;line-height:1.5;color:#e6dcc6;margin:0 0 16px;max-width:88%}
+  .hero .cta{display:inline-flex;align-items:center;gap:7px;background:var(--saffron);color:#2a1605;
+    font-weight:700;font-size:13px;padding:10px 15px;border-radius:30px}
+
+  .datewrap{margin:4px 2px 14px}
+  .datewrap .greg{font-family:'Fraunces',serif;font-size:20px;font-weight:600}
+  .datewrap .panch{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .datewrap .panch b{color:var(--ink);font-weight:600}
+
+  .stack{display:flex;flex-direction:column;gap:11px}
+
+  /* routine check items */
+  .check{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:12px 14px;cursor:pointer}
+  .box{width:23px;height:23px;border-radius:7px;border:2px solid var(--faint);flex:none;display:grid;place-items:center;
+    color:#fff;font-size:13px;transition:.15s}
+  .check.done .box{background:var(--ok);border-color:var(--ok)}
+  .check.done .ci-ttl{color:var(--muted);text-decoration:line-through}
+  .ci-ttl{font-weight:600;font-size:14px}
+  .ci-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .toggle{margin-left:auto;width:42px;height:24px;border-radius:20px;background:var(--faint);position:relative;flex:none;transition:.18s}
+  .toggle::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.18s}
+  .toggle.on{background:var(--saffron)}
+  .toggle.on::after{left:20px}
+
+  /* calendar */
+  .tithi-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:6px;scrollbar-width:none}
+  .tithi-strip::-webkit-scrollbar{display:none}
+  .pill{flex:none;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:8px 12px;text-align:center;min-width:74px}
+  .pill .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .pill .v{font-size:13px;font-weight:600;margin-top:3px}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin:10px 2px 12px}
+  .cal-head .mo{font-family:'Fraunces',serif;font-weight:600;font-size:18px}
+  .chev{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+  .dow,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .dow span{text-align:center;font-size:10px;font-weight:700;color:var(--faint);padding-bottom:6px}
+  .day{aspect-ratio:1;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:13px;font-weight:500;position:relative;cursor:pointer;color:var(--ink)}
+  .day.dim{color:var(--faint)}
+  .day:hover{background:var(--paper-2)}
+  .day.today{background:var(--indigo);color:#fdf3df;font-weight:700}
+  .day .mk{position:absolute;bottom:5px;font-size:8px;line-height:1}
+  .day .dot{position:absolute;bottom:7px;width:5px;height:5px;border-radius:50%;background:var(--peacock)}
+  .day.today .dot{background:#f6c879}
+
+  /* search */
+  .search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:15px;padding:13px 15px;color:var(--muted);font-size:13.5px;margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .chip{background:var(--paper-2);border:1px solid var(--line);border-radius:30px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+  .chip:hover{background:#FCEACB;border-color:#f0cf9e}
+  .rail{display:flex;gap:11px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .mini{flex:none;width:120px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;cursor:pointer}
+  .mini:hover{box-shadow:0 12px 26px -18px rgba(36,28,19,.4)}
+  .mini .g{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;margin-bottom:10px;
+    background:linear-gradient(150deg,#FCEACB,#F6D9A8);color:var(--saffron-deep)}
+  .mini .mt{font-weight:600;font-size:13px;line-height:1.2}
+  .mini .ms{font-size:11px;color:var(--muted);margin-top:3px}
+
+  /* detail (practice guide) */
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);
+    background:none;border:none;cursor:pointer;padding:8px 0;font-family:inherit}
+  .deity{display:flex;flex-direction:column;align-items:center;text-align:center;margin:4px 0 16px}
+  .deity .orb{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;font-size:36px;margin-bottom:12px;
+    background:radial-gradient(circle at 35% 30%,#2a3563,#13233f);color:#f6c879;box-shadow:0 0 0 6px rgba(182,134,44,.14)}
+  .deity h1{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin:0}
+  .tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px}
+  .tag{font-size:11px;font-weight:600;color:var(--muted);background:var(--paper-2);border:1px solid var(--line);padding:5px 10px;border-radius:20px}
+  .tradition{font-size:11.5px;color:var(--brass);font-weight:600;margin-top:9px;letter-spacing:.02em}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+  .panel .lab{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  .samagri{display:flex;flex-wrap:wrap;gap:7px}
+  .sam{font-size:12px;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:6px 10px;font-weight:500}
+  .why p{margin:0;font-size:13px;line-height:1.55;color:#4a3f31}
+
+  .mantra{text-align:center;padding:18px 14px}
+  .mantra .dev{font-family:'Noto Serif Devanagari',serif;font-size:25px;font-weight:600;line-height:1.5;color:var(--ink)}
+  .mantra .iast{font-style:italic;color:var(--saffron-deep);font-size:14.5px;margin-top:10px;font-weight:500}
+  .mantra .mean{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+  .audio{display:flex;align-items:center;gap:12px;margin-top:16px;background:var(--paper-2);border-radius:30px;padding:8px 8px 8px 8px}
+  .play{width:40px;height:40px;border-radius:50%;background:var(--saffron);color:#fff;border:none;display:grid;place-items:center;cursor:pointer;flex:none}
+  .wave{flex:1;height:22px;display:flex;align-items:center;gap:3px;overflow:hidden}
+  .wave i{flex:1;background:var(--faint);border-radius:3px;height:30%;opacity:.7}
+  .audio .tm{font-size:11px;color:var(--muted);font-weight:600;padding-right:10px}
+
+  /* japa / mala ring */
+  .japa{display:flex;flex-direction:column;align-items:center;padding:8px 0 4px}
+  .ring{position:relative;width:172px;height:172px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .count{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .count .n{font-family:'Fraunces',serif;font-weight:600;font-size:40px;line-height:1}
+  .ring .count .of{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600}
+  .japa .hint{font-size:11.5px;color:var(--faint);margin-top:12px;font-weight:600}
+  .ring.pulse{animation:pulse .18s ease}
+  @keyframes pulse{50%{transform:scale(1.035)}}
+
+  .btn-primary{display:block;width:100%;text-align:center;background:var(--saffron);color:#2a1605;font-weight:700;
+    font-size:14.5px;border:none;border-radius:15px;padding:15px;cursor:pointer;margin-top:6px;font-family:inherit}
+  .btn-primary:hover{background:var(--saffron-deep);color:#fff}
+
+  /* profile */
+  .prof-head{display:flex;align-items:center;gap:14px;margin:6px 0 18px}
+  .prof-head .pav{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2c3766,var(--indigo));
+    display:grid;place-items:center;color:#f3d9a6;font-weight:700;font-size:22px}
+  .prof-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin:0}
+  .prof-head .strk{font-size:12.5px;color:var(--saffron-deep);font-weight:600;margin-top:3px}
+  .setrow{display:flex;align-items:center;gap:12px;padding:15px 4px;border-bottom:1px solid var(--line);font-size:14px;font-weight:500;cursor:pointer}
+  .setrow .ic{width:20px;text-align:center}
+  .setrow .vv{margin-left:auto;color:var(--muted);font-size:12.5px}
+  .plus-card{background:linear-gradient(150deg,#2b2238,#3a2c1d);border:1px solid #5a4422;border-radius:20px;
+    padding:18px;color:#f6ead2;cursor:pointer;margin:16px 0 4px;position:relative;overflow:hidden}
+  .plus-card .halo{position:absolute;right:-24px;top:-24px;width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle,rgba(214,170,80,.4),transparent 70%)}
+  .plus-card .pk{color:var(--brass);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px}
+  .plus-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:7px 0 5px}
+  .plus-card p{font-size:12px;color:#d9c8aa;margin:0;line-height:1.5}
+
+  /* paywall */
+  .pay{background:linear-gradient(180deg,#241c2e 0%, #1b1626 100%);color:#f3e7d2;min-height:100%;padding:6px 20px 96px}
+  .pay .crest{text-align:center;margin:14px 0 18px}
+  .pay .crest .orb{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6a950,#a9761f);
+    display:grid;place-items:center;font-size:30px;margin:0 auto 14px;box-shadow:0 0 30px -4px rgba(214,170,80,.6)}
+  .pay h1{font-family:'Fraunces',serif;font-weight:600;font-size:24px;margin:0}
+  .pay .crest p{color:#c9b894;font-size:13px;margin:8px 0 0;line-height:1.5}
+  .feat{display:flex;gap:12px;padding:12px 2px;align-items:flex-start}
+  .feat .tick{color:var(--brass);font-weight:800;margin-top:1px}
+  .feat .ft{font-size:13.5px;font-weight:600}
+  .feat .fs{font-size:11.5px;color:#b6a585;margin-top:2px;line-height:1.4}
+  .plan-toggle{display:flex;gap:8px;margin:18px 0 10px}
+  .plan{flex:1;border:1.5px solid #4a3f2e;border-radius:15px;padding:14px;text-align:center;cursor:pointer;position:relative}
+  .plan.sel{border-color:var(--brass);background:rgba(214,170,80,.1)}
+  .plan .pt{font-weight:700;font-size:14px}
+  .plan .pp{font-size:11.5px;color:#c9b894;margin-top:3px}
+  .plan .badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--brass);color:#2a1d05;
+    font-size:9px;font-weight:800;letter-spacing:.06em;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  .btn-gold{display:block;width:100%;text-align:center;background:linear-gradient(120deg,#e6bd66,#c6921f);color:#2a1d05;
+    font-weight:800;font-size:14.5px;border:none;border-radius:15px;padding:16px;cursor:pointer;margin-top:8px;font-family:inherit}
+  .pay .fine{text-align:center;font-size:10.5px;color:#9b8a6c;margin-top:12px;line-height:1.5}
+
+  /* bottom nav */
+  .nav{position:absolute;left:11px;right:11px;bottom:11px;height:78px;background:rgba(251,246,236,.92);
+    backdrop-filter:blur(14px);border-top:1px solid var(--line);border-radius:0 0 36px 36px;
+    display:flex;align-items:flex-start;padding:11px 6px 0;justify-content:space-around}
+  .tab{flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;
+    color:var(--faint);font-size:9.5px;font-weight:600;font-family:inherit;padding:2px}
+  .tab svg{width:23px;height:23px}
+  .tab.active{color:var(--saffron-deep)}
+  .tab:focus-visible{outline:2px solid var(--saffron);outline-offset:3px;border-radius:8px}
+
+  .divider{height:18px;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.5;margin:6px 0}
+  .divider span{width:4px;height:4px;border-radius:50%;background:var(--faint)}
+  .divider .l{width:34px;height:1px;background:var(--line)}
+</style>
+
+<div class="intro">
+  <div class="brandmark">
+    <svg width="24" height="24" viewBox="0 0 24 24" class="flame"><path d="M12 2c3 4-1 5 1 9 .6 1.2 2-.3 2-2 2 2 3 4 3 7a6 6 0 0 1-12 0c0-3 2-5 3-7 .3 2 1.6 1.4 1.8.3C12.2 7 9.5 6 12 2Z" fill="#E07A1F"/></svg>
+    Mantrify
+  </div>
+  <p>Interactive prototype — tap the bottom tabs, the cards, and the prayer-bead ring. A guided prayer companion: it tells you what to pray today and shows you exactly how.</p>
+</div>
+
+<div class="phone">
+  <div class="screen">
+    <div class="statusbar"><span>6:04</span><div class="dots"><span>􀙇</span><span>􀛨</span><div class="bar"></div></div></div>
+
+    <div class="views">
+
+      <!-- ============ TODAY ============ -->
+      <section class="view active" id="today">
+        <div class="topbar">
+          <div class="name"><svg width="20" height="20" viewBox="0 0 24 24" class="flame"><path d="M12 2c3 4-1 5 1 9 .6 1.2 2-.3 2-2 2 2 3 4 3 7a6 6 0 0 1-12 0c0-3 2-5 3-7 .3 2 1.6 1.4 1.8.3C12.2 7 9.5 6 12 2Z" fill="#E07A1F"/></svg>Mantrify</div>
+          <div class="av" onclick="go('profile')">A</div>
+        </div>
+
+        <div class="datewrap">
+          <div class="eyebrow">Today</div>
+          <div class="greg">Monday, 10 June</div>
+          <div class="panch">Jyeshtha · Shukla Paksha · <b>Tritiya</b> · Rohini nakshatra</div>
+        </div>
+
+        <div class="hero" onclick="openGuide()">
+          <div class="halo"></div>
+          <div class="eb">Observance of the day</div>
+          <h2>Monday — a day for Shiva</h2>
+          <p>Mondays are traditionally devoted to Lord Shiva. A short morning prayer and lamp is a gentle way to begin.</p>
+          <span class="cta">Begin morning prayer →</span>
+        </div>
+
+        <div class="section-h"><h3>Recommended today</h3><a>See all</a></div>
+        <div class="stack">
+          <div class="card row-card" onclick="openGuide()">
+            <div class="glyph indigo">ॐ</div>
+            <div><div class="ttl">Om Namah Shivaya · Japa</div><div class="sub">Mantra · 108 repetitions · ~6 min</div></div>
+          </div>
+          <div class="card row-card" onclick="openGuide()">
+            <div class="glyph">🪔</div>
+            <div><div class="ttl">Shiva Aarti</div><div class="sub">Aarti · ~5 min · Beginner</div></div>
+          </div>
+        </div>
+
+        <div class="section-h"><h3>My routine</h3><a onclick="go('routine')">Edit</a></div>
+        <div class="stack">
+          <div class="check done" onclick="this.classList.toggle('done')"><div class="box">✓</div><div><div class="ci-ttl">Light the lamp</div><div class="ci-sub">Done · 6:01</div></div></div>
+          <div class="check" onclick="this.classList.toggle('done')"><div class="box">✓</div><div><div class="ci-ttl">Gayatri Mantra ×3</div><div class="ci-sub">Morning</div></div></div>
+          <div class="check" onclick="this.classList.toggle('done')"><div class="box">✓</div><div><div class="ci-ttl">Evening aarti</div><div class="ci-sub">After sunset</div></div></div>
+        </div>
+      </section>
+
+      <!-- ============ CALENDAR ============ -->
+      <section class="view" id="calendar">
+        <div class="topbar"><div class="name">Calendar</div><div class="av" onclick="go('profile')">A</div></div>
+        <div class="tithi-strip">
+          <div class="pill"><div class="k">Tithi</div><div class="v">Tritiya</div></div>
+          <div class="pill"><div class="k">Paksha</div><div class="v">Shukla</div></div>
+          <div class="pill"><div class="k">Nakshatra</div><div class="v">Rohini</div></div>
+          <div class="pill"><div class="k">Masa</div><div class="v">Jyeshtha</div></div>
+          <div class="pill"><div class="k">Vara</div><div class="v">Somvar</div></div>
+        </div>
+
+        <div class="cal-head">
+          <div class="chev">‹</div>
+          <div class="mo">June 2026</div>
+          <div class="chev">›</div>
+        </div>
+        <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="grid" id="grid"></div>
+
+        <div class="section-h"><h3>Monday, 10 June</h3></div>
+        <div class="stack">
+          <div class="card row-card" onclick="openGuide()">
+            <div class="glyph indigo">🕉</div>
+            <div><div class="ttl">Somvar — devoted to Shiva</div><div class="sub">Weekly observance · 2 suggested prayers</div></div>
+          </div>
+          <div class="card row-card">
+            <div class="glyph peacock">☾</div>
+            <div><div class="ttl">Pradosh Vrat</div><div class="sub">12 June · evening fast & worship</div></div>
+            <div class="lock">🔒 Plus</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ EXPLORE ============ -->
+      <section class="view" id="explore">
+        <div class="topbar"><div class="name">Explore</div><div class="av" onclick="go('profile')">A</div></div>
+        <div class="search">🔍 Search prayers, deities, occasions…</div>
+        <div class="eyebrow" style="margin:2px 2px 10px">For an occasion</div>
+        <div class="chips">
+          <span class="chip" onclick="openGuide()">🏠 New house</span>
+          <span class="chip" onclick="openGuide()">📚 Exams</span>
+          <span class="chip" onclick="openGuide()">🚗 New car</span>
+          <span class="chip" onclick="openGuide()">✈️ Travel</span>
+          <span class="chip" onclick="openGuide()">🩺 Health</span>
+          <span class="chip" onclick="openGuide()">🛍️ New business</span>
+        </div>
+
+        <div class="section-h"><h3>By occasion</h3><a>All</a></div>
+        <div class="rail">
+          <div class="mini" onclick="openGuide()"><div class="g">🏠</div><div class="mt">Griha Pravesh</div><div class="ms">Moving into a new home</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">📖</div><div class="mt">Vidyarambh</div><div class="ms">Starting studies · Saraswati</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">🚗</div><div class="mt">Vahan Puja</div><div class="ms">Blessing a new vehicle</div></div>
+        </div>
+
+        <div class="section-h"><h3>By type</h3></div>
+        <div class="rail">
+          <div class="mini" onclick="openGuide()"><div class="g">🪔</div><div class="mt">Puja</div><div class="ms">Ritual worship</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">ॐ</div><div class="mt">Mantra</div><div class="ms">Chant & japa</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">🔥</div><div class="mt">Aarti</div><div class="ms">Ritual of light</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">📿</div><div class="mt">Chalisa</div><div class="ms">40-verse hymns</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">📜</div><div class="mt">Stotra</div><div class="ms">Hymns of praise</div></div>
+        </div>
+
+        <div class="section-h"><h3>By deity</h3></div>
+        <div class="rail">
+          <div class="mini" onclick="openGuide()"><div class="g">🐘</div><div class="mt">Ganesha</div><div class="ms">New beginnings</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">🪷</div><div class="mt">Lakshmi</div><div class="ms">Wealth & wellbeing</div></div>
+          <div class="mini" onclick="openGuide()"><div class="g">🔱</div><div class="mt">Shiva</div><div class="ms">Mondays</div></div>
+        </div>
+      </section>
+
+      <!-- ============ ROUTINE ============ -->
+      <section class="view" id="routine">
+        <div class="topbar"><div class="name">My Routine</div><div class="av" onclick="go('profile')">A</div></div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.55;margin:2px 2px 16px">
+          Optional daily practices — not mandatory. Build a rhythm that fits your life and we'll remind you gently.</p>
+
+        <div class="eyebrow" style="margin:2px 2px 10px">Morning</div>
+        <div class="stack">
+          <div class="check"><div class="box"></div><div><div class="ci-ttl">Light the lamp</div><div class="ci-sub">6:00 · daily</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="check"><div class="box"></div><div><div class="ci-ttl">Gayatri Mantra ×3</div><div class="ci-sub">6:05 · daily</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+
+        <div class="eyebrow" style="margin:20px 2px 10px">Evening</div>
+        <div class="stack">
+          <div class="check"><div class="box"></div><div><div class="ci-ttl">Evening aarti</div><div class="ci-sub">After sunset · daily</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="check"><div class="box"></div><div><div class="ci-ttl">Hanuman Chalisa</div><div class="ci-sub">Tue & Sat</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+
+        <button class="btn-primary" style="margin-top:20px" onclick="go('explore')">+ Add a practice</button>
+      </section>
+
+      <!-- ============ PROFILE ============ -->
+      <section class="view" id="profile">
+        <div class="topbar"><div class="name">Profile</div></div>
+        <div class="prof-head">
+          <div class="pav">A</div>
+          <div><h2>Aarav</h2><div class="strk">🔥 12-day streak</div></div>
+        </div>
+
+        <div class="plus-card" onclick="go('paywall')">
+          <div class="halo"></div>
+          <div class="pk">Mantrify Plus</div>
+          <h3>Go deeper</h3>
+          <p>Full library, offline downloads, all languages & festival guides. 7 days free.</p>
+        </div>
+
+        <div class="setrow"><span class="ic">🪔</span> Personalisation <span class="vv">Shaiva · North</span></div>
+        <div class="setrow"><span class="ic">🌐</span> Language <span class="vv">English</span></div>
+        <div class="setrow"><span class="ic">🔔</span> Reminders <span class="vv">On</span></div>
+        <div class="setrow"><span class="ic">⭐</span> Favourites <span class="vv">8</span></div>
+        <div class="setrow"><span class="ic">⬇️</span> Downloads <span class="vv">Plus</span></div>
+        <div class="setrow"><span class="ic">📿</span> History & streaks <span class="vv">›</span></div>
+      </section>
+
+      <!-- ============ PRACTICE GUIDE (detail) ============ -->
+      <section class="view" id="guide">
+        <button class="back" onclick="goBack()">‹ Back</button>
+        <div class="deity">
+          <div class="orb">🔱</div>
+          <h1>Om Namah Shivaya</h1>
+          <div class="tags"><span class="tag">Mantra · Japa</span><span class="tag">~6 min</span><span class="tag">Beginner</span></div>
+          <div class="tradition">Shaiva · Universal</div>
+        </div>
+
+        <div class="panel why">
+          <div class="lab">Why this matters</div>
+          <p>One of the most beloved mantras to Shiva. "I bow to the auspicious one" — a simple, grounding chant said to quiet the mind. Perfect for a first daily practice.</p>
+        </div>
+
+        <div class="panel">
+          <div class="lab">You'll need</div>
+          <div class="samagri"><span class="sam">A quiet space</span><span class="sam">A mala (optional)</span><span class="sam">A lamp (optional)</span></div>
+        </div>
+
+        <div class="panel mantra">
+          <div class="lab" style="margin-bottom:14px">The mantra</div>
+          <div class="dev">ॐ नमः शिवाय</div>
+          <div class="iast">Oṃ Namaḥ Śivāya</div>
+          <div class="mean">"I bow to Shiva — the auspicious inner Self."</div>
+          <div class="audio">
+            <button class="play" onclick="this.textContent=this.textContent==='▶'?'❚❚':'▶'">▶</button>
+            <div class="wave" id="wave"></div>
+            <span class="tm">0:08</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="lab" style="text-align:center">Japa counter</div>
+          <div class="japa">
+            <div class="ring" id="ring" onclick="bead()" role="button" tabindex="0" aria-label="Tap to count one repetition">
+              <svg width="172" height="172" viewBox="0 0 172 172">
+                <circle cx="86" cy="86" r="74" fill="none" stroke="rgba(36,28,19,.08)" stroke-width="10"/>
+                <circle id="prog" cx="86" cy="86" r="74" fill="none" stroke="#E07A1F" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
+              </svg>
+              <div class="count"><div class="n" id="num">0</div><div class="of">of 108</div></div>
+            </div>
+            <div class="hint">Tap the ring with each repetition</div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="goBack()">Mark as done</button>
+      </section>
+
+      <!-- ============ PAYWALL ============ -->
+      <section class="view" id="paywall">
+        <div class="pay">
+          <button class="back" style="color:#c9b894" onclick="goBack()">‹ Back</button>
+          <div class="crest">
+            <div class="orb">🪔</div>
+            <h1>Mantrify Plus</h1>
+            <p>Everything you need to deepen your practice — your first 7 days are free.</p>
+          </div>
+
+          <div class="feat"><span class="tick">✓</span><div><div class="ft">The complete library</div><div class="fs">Every puja, mantra, aarti & occasion guide — including advanced 16-step pujas.</div></div></div>
+          <div class="feat"><span class="tick">✓</span><div><div class="ft">Listen offline</div><div class="fs">Download guides and authentic audio for the temple or travel.</div></div></div>
+          <div class="feat"><span class="tick">✓</span><div><div class="ft">All languages</div><div class="fs">Hindi & Sanskrit content with full transliteration and meaning.</div></div></div>
+          <div class="feat"><span class="tick">✓</span><div><div class="ft">Unlimited routine & festival guides</div><div class="fs">Set as many reminders as you like; go deep on every festival.</div></div></div>
+
+          <div class="plan-toggle">
+            <div class="plan" onclick="selPlan(this)"><div class="pt">Monthly</div><div class="pp">billed monthly</div></div>
+            <div class="plan sel" onclick="selPlan(this)"><div class="badge">Save 40%</div><div class="pt">Annual</div><div class="pp">best value</div></div>
+          </div>
+          <button class="btn-gold">Start 7-day free trial</button>
+          <div class="fine">Prices set per region at launch. Cancel anytime in the App Store / Google Play. No ads, ever.</div>
+        </div>
+      </section>
+
+    </div><!-- /views -->
+
+    <!-- bottom nav -->
+    <nav class="nav" id="nav">
+      <button class="tab active" data-t="today" onclick="go('today')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Today</button>
+      <button class="tab" data-t="calendar" onclick="go('calendar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Calendar</button>
+      <button class="tab" data-t="explore" onclick="go('explore')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Explore</button>
+      <button class="tab" data-t="routine" onclick="go('routine')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M3 12a9 9 0 1 0 14-7"/></svg>Routine</button>
+      <button class="tab" data-t="profile" onclick="go('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</button>
+    </nav>
+  </div>
+</div>
+
+<script>
+  const tabScreens = ['today','calendar','explore','routine','profile'];
+  let backTo = 'today';
+
+  function show(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id===id));
+    document.querySelectorAll('.view').forEach(v=>{ if(v.id===id) v.scrollTop=0; });
+    const isTab = tabScreens.includes(id);
+    document.getElementById('nav').style.display = (id==='paywall') ? 'none' : 'flex';
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.t===id));
+  }
+  function go(id){ if(tabScreens.includes(id)) backTo = id; show(id); }
+  function openGuide(){ const cur=document.querySelector('.view.active'); if(tabScreens.includes(cur.id)) backTo=cur.id; show('guide'); }
+  function goBack(){ show(backTo); }
+
+  function selPlan(el){ document.querySelectorAll('.plan').forEach(p=>p.classList.remove('sel')); el.classList.add('sel'); }
+
+  // japa ring
+  let beads=0; const C=465;
+  function bead(){
+    beads=(beads+1)%109;
+    document.getElementById('num').textContent=beads;
+    document.getElementById('prog').setAttribute('stroke-dashoffset', C - C*(beads/108));
+    const r=document.getElementById('ring'); r.classList.remove('pulse'); void r.offsetWidth; r.classList.add('pulse');
+    if(navigator.vibrate) navigator.vibrate(8);
+  }
+  document.getElementById('ring').addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();bead();}});
+
+  // build calendar grid (June 2026: 1st = Monday)
+  (function(){
+    const g=document.getElementById('grid');
+    const festivals={12:'🔥'}; const ekadashi=[10,25];
+    for(let d=1; d<=30; d++){
+      const cell=document.createElement('div');
+      cell.className='day'+(d===10?' today':'');
+      cell.innerHTML=`${d}` +
+        (festivals[d]?`<span class="mk">${festivals[d]}</span>`:'') +
+        (ekadashi.includes(d)&&!festivals[d]?`<span class="dot"></span>`:'');
+      cell.onclick=()=>{};
+      g.appendChild(cell);
+    }
+    // trailing days of next month (greyed) to fill the week
+    for(let d=1; d<=5; d++){ const c=document.createElement('div'); c.className='day dim'; c.textContent=d; g.appendChild(c); }
+  })();
+
+  // waveform bars
+  (function(){ const w=document.getElementById('wave'); for(let i=0;i<34;i++){ const b=document.createElement('i'); b.style.height=(20+Math.abs(Math.sin(i*0.6))*70)+'%'; w.appendChild(b);} })();
+</script>
