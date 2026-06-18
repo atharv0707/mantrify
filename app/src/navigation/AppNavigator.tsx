@@ -10,7 +10,7 @@ import type { RootStackParamList, TabParamList } from './types';
 import TodayScreen from '../screens/TodayScreen';
 import CalendarScreen from '../screens/CalendarScreen';
 import ExploreScreen from '../screens/ExploreScreen';
-import FavoritesScreen from '../screens/FavoritesScreen';
+import FavouritesScreen from '../screens/FavouritesScreen';
 import RoutineScreen from '../screens/RoutineScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PracticeGuideScreen from '../screens/PracticeGuideScreen';
@@ -22,7 +22,7 @@ const TAB_ICONS: Record<keyof TabParamList, keyof typeof Feather.glyphMap> = {
   Today: 'home',
   Calendar: 'calendar',
   Explore: 'search',
-  Favorites: 'heart',
+  Favourites: 'star',
   Routine: 'check-circle',
   Profile: 'user',
 };
@@ -52,7 +52,7 @@ function MainTabs() {
       <Tab.Screen name="Today" component={TodayScreen} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Favorites" component={FavoritesScreen} />
+      <Tab.Screen name="Favourites" component={FavouritesScreen} />
       <Tab.Screen name="Routine" component={RoutineScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

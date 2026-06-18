@@ -5,10 +5,12 @@ import { Feather } from '@expo/vector-icons';
 import { Screen } from '../components/Screen';
 import { Panel } from '../components/Panel';
 import { Toggle } from '../components/Toggle';
+import { LanguageToggle } from '../components/LanguageToggle';
 import { JapaRing } from '../components/JapaRing';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useApp } from '../context/AppContext';
 import type { Practice } from '../api/types';
 import { todayStr } from '../utils/date';
 
@@ -26,6 +28,7 @@ export default function PracticeGuideScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { practiceId } = route.params as { practiceId: string };
+  const { language, isFavourite, toggleFavourite } = useApp();
 
   const [practice, setPractice] = useState<Practice | null>(null);
   const [count, setCount] = useState(0);
@@ -52,15 +55,6 @@ export default function PracticeGuideScreen() {
       </Screen>
     );
   }
-
-  const toggleFavorite = async () => {
-    if (practice.isFavorite) {
-      await api.removeFavorite(practice.id);
-    } else {
-      await api.addFavorite(practice.id);
-    }
-    setPractice({ ...practice, isFavorite: !practice.isFavorite });
-  };
 
   const toggleLine = (key: string) => {
     setRevealed((prev) => {
@@ -103,10 +97,10 @@ export default function PracticeGuideScreen() {
         </View>
         <Text style={styles.tradition}>{practice.traditionTags.map(capitalize).join(' · ')}</Text>
 
-        <Pressable style={styles.favorite} onPress={toggleFavorite} hitSlop={10}>
-          <Feather name="star" size={16} color={practice.isFavorite ? colors.brass : colors.faint} />
-          <Text style={[styles.favoriteText, practice.isFavorite && { color: colors.brass }]}>
-            {practice.isFavorite ? 'Saved' : 'Save'}
+        <Pressable style={styles.favourite} onPress={() => toggleFavourite(practice.id)} hitSlop={10}>
+          <Feather name="star" size={16} color={isFavourite(practice.id) ? colors.brass : colors.faint} />
+          <Text style={[styles.favouriteText, isFavourite(practice.id) && { color: colors.brass }]}>
+            {isFavourite(practice.id) ? 'Saved' : 'Save'}
           </Text>
         </Pressable>
       </View>
@@ -135,6 +129,10 @@ export default function PracticeGuideScreen() {
           </Pressable>
         </View>
 
+        <View style={styles.languageToggleWrap}>
+          <LanguageToggle />
+        </View>
+
         {practice.mantras.map((section, si) => (
           <View key={si} style={si > 0 ? styles.sectionGap : undefined}>
             {section.label && <Text style={styles.sectionLabel}>{section.label}</Text>}
@@ -143,8 +141,14 @@ export default function PracticeGuideScreen() {
               const open = showAllMeanings || revealed.has(key);
               return (
                 <Pressable key={key} style={styles.line} onPress={() => toggleLine(key)}>
-                  <Text style={styles.dev}>{line.devanagari}</Text>
-                  <Text style={styles.iast}>{line.transliteration}</Text>
+                  {(language === 'hi' || language === 'both') && (
+                    <Text style={styles.dev}>{line.devanagari}</Text>
+                  )}
+                  {(language === 'en' || language === 'both') && (
+                    <Text style={[styles.iast, language === 'both' && styles.iastWithDev]}>
+                      {line.transliteration}
+                    </Text>
+                  )}
                   {open ? (
                     <Text style={styles.mean}>{line.meaning}</Text>
                   ) : (
@@ -265,13 +269,13 @@ const styles = StyleSheet.create({
     marginTop: 9,
     letterSpacing: 0.4,
   },
-  favorite: {
+  favourite: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     marginTop: 12,
   },
-  favoriteText: {
+  favouriteText: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12.5,
     color: colors.faint,
@@ -331,6 +335,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.muted,
   },
+  languageToggleWrap: {
+    marginBottom: 10,
+  },
   sectionGap: {
     marginTop: 6,
   },
@@ -359,8 +366,10 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: colors.saffronDeep,
     fontSize: 13.5,
-    marginTop: 7,
     lineHeight: 20,
+  },
+  iastWithDev: {
+    marginTop: 7,
   },
   mean: {
     fontFamily: fonts.sans,

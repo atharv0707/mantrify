@@ -10,11 +10,13 @@ import { PracticeRow } from '../components/PracticeRow';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useApp } from '../context/AppContext';
 import type { TodayResponse } from '../api/types';
 import { formatGregorian, todayStr } from '../utils/date';
 
 export default function TodayScreen() {
   const navigation = useNavigation<any>();
+  const { isFavourite, toggleFavourite } = useApp();
   const [data, setData] = useState<TodayResponse | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -97,6 +99,8 @@ export default function TodayScreen() {
             key={practice.id}
             practice={practice}
             onPress={() => navigation.navigate('PracticeGuide', { practiceId: practice.id })}
+            isFavourite={isFavourite(practice.id)}
+            onToggleFavourite={() => toggleFavourite(practice.id)}
           />
         ))}
         {data.recommended.length === 0 && (

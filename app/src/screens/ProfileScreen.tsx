@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '../components/Screen';
+import { LanguageToggle } from '../components/LanguageToggle';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
@@ -70,20 +71,22 @@ export default function ProfileScreen() {
           {TRADITION_LABELS[profile.tradition] ?? profile.tradition} · {REGION_LABELS[profile.region] ?? profile.region}
         </Text>
       </Pressable>
-      <Pressable style={styles.setRow}>
-        <Text style={styles.icon}>🌐</Text>
-        <Text style={styles.setLabel}>Language</Text>
-        <Text style={styles.setValue}>{profile.language === 'en' ? 'English' : profile.language}</Text>
-      </Pressable>
+      <View style={[styles.setRow, styles.languageRow]}>
+        <View style={styles.languageRowTop}>
+          <Text style={styles.icon}>🌐</Text>
+          <Text style={styles.setLabel}>Language</Text>
+        </View>
+        <LanguageToggle />
+      </View>
       <Pressable style={styles.setRow}>
         <Text style={styles.icon}>🔔</Text>
         <Text style={styles.setLabel}>Reminders</Text>
         <Text style={styles.setValue}>On</Text>
       </Pressable>
-      <Pressable style={styles.setRow} onPress={() => navigation.navigate('Favorites')}>
+      <Pressable style={styles.setRow} onPress={() => navigation.navigate('Favourites')}>
         <Text style={styles.icon}>⭐</Text>
         <Text style={styles.setLabel}>Favourites</Text>
-        <Text style={styles.setValue}>{profile.favoritesCount} ›</Text>
+        <Text style={styles.setValue}>{profile.favouritesCount} ›</Text>
       </Pressable>
       <Pressable style={[styles.setRow, styles.lastRow]}>
         <Text style={styles.icon}>📿</Text>
@@ -149,6 +152,16 @@ const styles = StyleSheet.create({
   },
   lastRow: {
     borderBottomWidth: 0,
+  },
+  languageRow: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: 10,
+  },
+  languageRowTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   icon: {
     width: 20,

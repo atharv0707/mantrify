@@ -11,6 +11,7 @@ import { Glyph } from '../components/Glyph';
 import { colors, radii } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useApp } from '../context/AppContext';
 import type { PracticeSummary } from '../api/types';
 
 const OCCASION_CHIPS = [
@@ -19,12 +20,17 @@ const OCCASION_CHIPS = [
   { label: '🚗 New car', occasion: 'new-car' },
   { label: '✈️ Travel', occasion: 'travel' },
   { label: '🩺 Health', occasion: 'health' },
+  { label: '🪔 Navratri', occasion: 'navratri' },
+  { label: '🎇 Diwali', occasion: 'diwali' },
+  { label: '🙏 New beginning', occasion: 'new-beginning' },
 ];
 
 const OCCASION_RAIL = [
   { id: 'griha-pravesh', glyph: '🏠', title: 'Griha Pravesh', subtitle: 'Moving into a new home' },
+  { id: 'satyanarayan-puja', glyph: '🙏', title: 'Satyanarayan Puja', subtitle: 'Thanksgiving · Vishnu' },
   { id: 'vidyarambh', glyph: '📖', title: 'Vidyarambh', subtitle: 'Starting studies · Saraswati' },
   { id: 'vahan-puja', glyph: '🚗', title: 'Vahan Puja', subtitle: 'Blessing a new vehicle' },
+  { id: 'diwali-lakshmi-puja', glyph: '🪔', title: 'Diwali Puja', subtitle: 'Lakshmi · Diwali' },
 ];
 
 const TYPE_RAIL = [
@@ -37,12 +43,19 @@ const TYPE_RAIL = [
 
 const DEITY_RAIL = [
   { deity: 'ganesha', glyph: '🐘', title: 'Ganesha', subtitle: 'New beginnings' },
-  { deity: 'lakshmi', glyph: '🪷', title: 'Lakshmi', subtitle: 'Wealth & wellbeing' },
+  { deity: 'vishnu', glyph: '🌀', title: 'Vishnu', subtitle: 'Thursdays' },
   { deity: 'shiva', glyph: '🔱', title: 'Shiva', subtitle: 'Mondays' },
+  { deity: 'lakshmi', glyph: '🪷', title: 'Lakshmi', subtitle: 'Wealth & wellbeing' },
+  { deity: 'hanuman', glyph: '🪔', title: 'Hanuman', subtitle: 'Tues & Saturdays' },
+  { deity: 'durga', glyph: '🔥', title: 'Durga', subtitle: 'Navratri' },
+  { deity: 'krishna', glyph: '🎵', title: 'Krishna', subtitle: 'Janmashtami' },
+  { deity: 'saraswati', glyph: '📖', title: 'Saraswati', subtitle: 'Knowledge' },
+  { deity: 'surya', glyph: '☀️', title: 'Surya', subtitle: 'Sundays' },
 ];
 
 export default function ExploreScreen() {
   const navigation = useNavigation<any>();
+  const { isFavourite, toggleFavourite } = useApp();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PracticeSummary[] | null>(null);
   const [resultsLabel, setResultsLabel] = useState('');
@@ -105,7 +118,13 @@ export default function ExploreScreen() {
           <View style={styles.stack}>
             {results.length === 0 && <Text style={styles.empty}>No matches yet — try another search.</Text>}
             {results.map((p) => (
-              <PracticeRow key={p.id} practice={p} onPress={() => navigation.navigate('PracticeGuide', { practiceId: p.id })} />
+              <PracticeRow
+                key={p.id}
+                practice={p}
+                onPress={() => navigation.navigate('PracticeGuide', { practiceId: p.id })}
+                isFavourite={isFavourite(p.id)}
+                onToggleFavourite={() => toggleFavourite(p.id)}
+              />
             ))}
           </View>
         </>

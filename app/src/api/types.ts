@@ -52,7 +52,7 @@ export interface Practice extends PracticeSummary {
   materials: string[];
   mantras: MantraSection[];
   steps: Step[];
-  isFavorite: boolean;
+  isFavourite: boolean;
 }
 
 export interface Observance {
@@ -122,5 +122,5 @@ export interface Profile {
   region: string;
   experience: string;
   streak: number;
-  favoritesCount: number;
+  favouritesCount: number;
 }

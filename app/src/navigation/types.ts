@@ -4,7 +4,7 @@ export type TabParamList = {
   Today: undefined;
   Calendar: undefined;
   Explore: undefined;
-  Favorites: undefined;
+  Favourites: undefined;
   Routine: undefined;
   Profile: undefined;
 };

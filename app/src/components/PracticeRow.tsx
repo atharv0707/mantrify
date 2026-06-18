@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { Card } from './Card';
 import { Glyph } from './Glyph';
 import { colors } from '../theme/colors';
@@ -10,10 +11,14 @@ export function PracticeRow({
   practice,
   onPress,
   trailing,
+  isFavourite,
+  onToggleFavourite,
 }: {
   practice: PracticeSummary;
   onPress: () => void;
   trailing?: React.ReactNode;
+  isFavourite?: boolean;
+  onToggleFavourite?: () => void;
 }) {
   return (
     <Card onPress={onPress} style={styles.row}>
@@ -22,6 +27,11 @@ export function PracticeRow({
         <Text style={styles.title} numberOfLines={1}>{practice.title}</Text>
         <Text style={styles.subtitle} numberOfLines={1}>{practice.summary}</Text>
       </View>
+      {onToggleFavourite && (
+        <Pressable style={styles.favouriteBtn} onPress={onToggleFavourite} hitSlop={10}>
+          <Feather name="star" size={17} color={isFavourite ? colors.brass : colors.faint} />
+        </Pressable>
+      )}
       {trailing && <View style={styles.trailing}>{trailing}</View>}
     </Card>
   );
@@ -48,6 +58,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.muted,
     marginTop: 3,
+  },
+  favouriteBtn: {
+    marginLeft: 'auto',
+    paddingLeft: 8,
   },
   trailing: {
     marginLeft: 'auto',

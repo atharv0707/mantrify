@@ -61,14 +61,11 @@ CREATE TABLE IF NOT EXISTS favorites (
 const DEMO_USER = 'demo-user';
 
 function seed() {
-  const practiceCount = db.prepare('SELECT COUNT(*) AS c FROM practices').get().c;
-  if (practiceCount === 0) {
-    const insert = db.prepare('INSERT INTO practices (id, data) VALUES (?, ?)');
-    const tx = db.transaction((rows) => {
-      for (const p of rows) insert.run(p.id, JSON.stringify(p));
-    });
-    tx(practices);
-  }
+  // Always upsert practices so new entries in seedData take effect on next restart
+  const upsertPractice = db.prepare('INSERT OR REPLACE INTO practices (id, data) VALUES (?, ?)');
+  db.transaction((rows) => {
+    for (const p of rows) upsertPractice.run(p.id, JSON.stringify(p));
+  })(practices);
 
   const festivalCount = db.prepare('SELECT COUNT(*) AS c FROM festivals').get().c;
   if (festivalCount === 0) {

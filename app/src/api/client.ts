@@ -55,9 +55,9 @@ export const api = {
   setCompletion: (body: { routineItemId?: number; practiceId?: string; date?: string; done: boolean }) =>
     request<{ ok: true; done: boolean }>('/v1/me/completions', { method: 'POST', body: JSON.stringify(body) }),
 
-  getFavorites: () => request<{ items: PracticeSummary[] }>('/v1/me/favorites'),
-  addFavorite: (practiceId: string) => request<{ ok: true }>(`/v1/me/favorites/${practiceId}`, { method: 'POST' }),
-  removeFavorite: (practiceId: string) => request<{ ok: true }>(`/v1/me/favorites/${practiceId}`, { method: 'DELETE' }),
+  getFavourites: () => request<{ items: PracticeSummary[] }>('/v1/me/favourites'),
+  addFavourite: (practiceId: string) => request<{ ok: true }>(`/v1/me/favourites/${practiceId}`, { method: 'POST' }),
+  removeFavourite: (practiceId: string) => request<{ ok: true }>(`/v1/me/favourites/${practiceId}`, { method: 'DELETE' }),
 
   getProfile: () => request<Profile>('/v1/me/profile'),
   updateProfile: (body: Partial<{ language: string; tradition: string; region: string; experience: string }>) =>

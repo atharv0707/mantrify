@@ -9,6 +9,7 @@ import { PracticeRow } from '../components/PracticeRow';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useApp } from '../context/AppContext';
 import type { PracticeSummary } from '../api/types';
 
 const TYPE_ORDER: { type: PracticeSummary['type']; label: string }[] = [
@@ -21,12 +22,13 @@ const TYPE_ORDER: { type: PracticeSummary['type']; label: string }[] = [
   { type: 'sankalpa', label: 'Sankalpas' },
 ];
 
-export default function FavoritesScreen() {
+export default function FavouritesScreen() {
   const navigation = useNavigation<any>();
+  const { toggleFavourite } = useApp();
   const [items, setItems] = useState<PracticeSummary[] | null>(null);
 
   const load = useCallback(async () => {
-    const res = await api.getFavorites();
+    const res = await api.getFavourites();
     setItems(res.items);
   }, []);
 
@@ -38,13 +40,13 @@ export default function FavoritesScreen() {
 
   const remove = async (id: string) => {
     setItems((prev) => (prev ? prev.filter((p) => p.id !== id) : prev));
-    await api.removeFavorite(id);
+    await toggleFavourite(id);
   };
 
   if (!items) {
     return (
       <Screen>
-        <TopBar title="Favorites" />
+        <TopBar title="Favourites" />
         <View style={styles.loading}>
           <ActivityIndicator color={colors.saffron} />
         </View>
@@ -59,14 +61,14 @@ export default function FavoritesScreen() {
 
   return (
     <Screen onRefresh={load} refreshing={false}>
-      <TopBar title="Favorites" />
+      <TopBar title="Favourites" />
 
       {items.length === 0 ? (
         <View style={styles.empty}>
           <View style={styles.emptyOrb}>
-            <Feather name="heart" size={26} color={colors.rose} />
+            <Feather name="star" size={26} color={colors.rose} />
           </View>
-          <Text style={styles.emptyTitle}>No favorites yet</Text>
+          <Text style={styles.emptyTitle}>No favourites yet</Text>
           <Text style={styles.emptyBody}>
             Tap the star on any prayer to save it here for quick access — your mantras, aartis,
             chalisas and more, all in one place.
@@ -85,11 +87,8 @@ export default function FavoritesScreen() {
                   key={p.id}
                   practice={p}
                   onPress={() => navigation.navigate('PracticeGuide', { practiceId: p.id })}
-                  trailing={
-                    <Pressable onPress={() => remove(p.id)} hitSlop={10}>
-                      <Feather name="star" size={18} color={colors.brass} />
-                    </Pressable>
-                  }
+                  isFavourite
+                  onToggleFavourite={() => remove(p.id)}
                 />
               ))}
             </View>

@@ -194,12 +194,68 @@ app.get('/v1/practices/:id', (req, res) => {
   const practice = loadPractice(req.params.id);
   if (!practice) return res.status(404).json({ error: 'not_found' });
 
-  const isFavorite = !!db.prepare('SELECT 1 FROM favorites WHERE user_id = ? AND practice_id = ?').get(DEMO_USER, practice.id);
+  const isFavourite = !!db.prepare('SELECT 1 FROM favorites WHERE user_id = ? AND practice_id = ?').get(DEMO_USER, practice.id);
 
-  res.json({ ...practice, isFavorite });
+  res.json({ ...practice, isFavourite });
 });
 
 // ---------- /v1/search ----------
+
+// Common name aliases so queries like "ganpati", "laxmi", "mahadev" resolve correctly
+const SEARCH_ALIASES = {
+  'ganesh': 'ganesha', 'ganpati': 'ganesha', 'ganapati': 'ganesha', 'vinayak': 'ganesha',
+  'laxmi': 'lakshmi', 'mahalakshmi': 'lakshmi',
+  'shiv': 'shiva', 'mahadev': 'shiva', 'bholenath': 'shiva', 'shankar': 'shiva', 'shankara': 'shiva',
+  'bajrangbali': 'hanuman', 'pawanputra': 'hanuman', 'maruti': 'hanuman', 'anjaniputra': 'hanuman',
+  'ambe': 'durga', 'bhavani': 'durga', 'jagdamba': 'durga', 'maa durga': 'durga',
+  'sharada': 'saraswati', 'vagdevi': 'saraswati',
+  'narayan': 'vishnu', 'narayana': 'vishnu', 'hari': 'vishnu', 'madhav': 'vishnu',
+  'ram': 'rama', 'ramchandra': 'rama', 'shri ram': 'rama',
+  'govind': 'krishna', 'murari': 'krishna', 'kanha': 'krishna', 'gopal': 'krishna',
+  'aditya': 'surya', 'sun god': 'surya',
+};
+
+function scoreMatch(p, needle) {
+  const lc = (x) => (x ?? '').toLowerCase();
+  let score = 0;
+
+  // Collect searchable text with weights (higher = more important field)
+  const mantraText = (p.mantras ?? [])
+    .flatMap((sec) => sec.lines ?? [])
+    .map((l) => `${lc(l.transliteration)} ${lc(l.devanagari)}`)
+    .join(' ');
+
+  const fields = [
+    { text: lc(p.title), weight: 10 },
+    { text: lc(p.deity), weight: 8 },
+    { text: lc(p.type), weight: 5 },
+    { text: lc(p.summary), weight: 4 },
+    { text: (p.occasions ?? []).join(' ').toLowerCase(), weight: 4 },
+    { text: lc(p.why), weight: 2 },
+    { text: (p.traditionTags ?? []).join(' ').toLowerCase(), weight: 1 },
+    { text: mantraText, weight: 3 },
+  ];
+
+  const fullText = fields.map((f) => f.text).join(' ');
+
+  // Alias boost: if the query resolves to a deity name that matches this practice
+  const resolvedDeity = SEARCH_ALIASES[needle];
+  if (resolvedDeity && p.deity === resolvedDeity) score += 15;
+
+  // Per-field substring match
+  for (const { text, weight } of fields) {
+    if (text.includes(needle)) score += weight;
+  }
+
+  // Multi-token: split query into words and require all of them to appear somewhere
+  const tokens = needle.split(/\s+/).filter((t) => t.length > 1);
+  if (tokens.length > 1) {
+    if (!tokens.every((t) => fullText.includes(t))) return 0; // all tokens must match
+    score += tokens.length * 2;
+  }
+
+  return score;
+}
 
 app.get('/v1/search', (req, res) => {
   const { q, type, deity, occasion } = req.query;
@@ -208,13 +264,14 @@ app.get('/v1/search', (req, res) => {
   if (type) results = results.filter((p) => p.type === type);
   if (deity) results = results.filter((p) => p.deity === deity);
   if (occasion) results = results.filter((p) => p.occasions?.includes(occasion));
+
   if (q) {
-    const needle = q.toLowerCase();
-    results = results.filter((p) =>
-      p.title.toLowerCase().includes(needle) ||
-      p.summary.toLowerCase().includes(needle) ||
-      p.occasions?.some((o) => o.toLowerCase().includes(needle))
-    );
+    const needle = q.toLowerCase().trim();
+    results = results
+      .map((p) => ({ p, score: scoreMatch(p, needle) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(({ p }) => p);
   }
 
   res.json({ results: results.map(practiceSummary) });
@@ -301,21 +358,21 @@ app.post('/v1/me/completions', (req, res) => {
   res.json({ ok: true, done: true });
 });
 
-// ---------- /v1/me/favorites ----------
+// ---------- /v1/me/favourites ----------
 
-app.get('/v1/me/favorites', (req, res) => {
+app.get('/v1/me/favourites', (req, res) => {
   const rows = db.prepare('SELECT practice_id FROM favorites WHERE user_id = ?').all(DEMO_USER);
   const items = rows.map((r) => loadPractice(r.practice_id)).filter(Boolean).map(practiceSummary);
   res.json({ items });
 });
 
-app.post('/v1/me/favorites/:practiceId', (req, res) => {
+app.post('/v1/me/favourites/:practiceId', (req, res) => {
   if (!loadPractice(req.params.practiceId)) return res.status(404).json({ error: 'not_found' });
   db.prepare('INSERT OR IGNORE INTO favorites (user_id, practice_id) VALUES (?, ?)').run(DEMO_USER, req.params.practiceId);
   res.json({ ok: true });
 });
 
-app.delete('/v1/me/favorites/:practiceId', (req, res) => {
+app.delete('/v1/me/favourites/:practiceId', (req, res) => {
   db.prepare('DELETE FROM favorites WHERE user_id = ? AND practice_id = ?').run(DEMO_USER, req.params.practiceId);
   res.json({ ok: true });
 });
@@ -333,7 +390,7 @@ app.get('/v1/me/profile', (req, res) => {
     region: user.region,
     experience: user.experience,
     streak: user.streak,
-    favoritesCount: favCount,
+    favouritesCount: favCount,
   });
 });
 

@@ -10,6 +10,7 @@ import { Card } from '../components/Card';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useApp } from '../context/AppContext';
 import type { CalendarResponse, DayDetailResponse } from '../api/types';
 import { formatDayMonth, monthLabel, shiftMonth, thisMonthStr, todayStr } from '../utils/date';
 
@@ -23,6 +24,7 @@ const PILLS: { key: keyof CalendarResponse['today']; label: string }[] = [
 
 export default function CalendarScreen() {
   const navigation = useNavigation<any>();
+  const { isFavourite, toggleFavourite } = useApp();
   const [month, setMonth] = useState(thisMonthStr());
   const [calendar, setCalendar] = useState<CalendarResponse | null>(null);
   const [selectedDate, setSelectedDate] = useState(todayStr());
@@ -148,7 +150,12 @@ export default function CalendarScreen() {
             </Card>
             {obs.practices.map((p) => (
               <View key={p.id} style={{ marginTop: 8 }}>
-                <PracticeRow practice={p} onPress={() => navigation.navigate('PracticeGuide', { practiceId: p.id })} />
+                <PracticeRow
+                  practice={p}
+                  onPress={() => navigation.navigate('PracticeGuide', { practiceId: p.id })}
+                  isFavourite={isFavourite(p.id)}
+                  onToggleFavourite={() => toggleFavourite(p.id)}
+                />
               </View>
             ))}
           </View>
