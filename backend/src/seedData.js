@@ -15,6 +15,7 @@ export const deities = [
   { id: 'krishna', name: 'Krishna', glyph: '🎵', glyphStyle: 'peacock' },
   { id: 'rama', name: 'Rama', glyph: '🏹', glyphStyle: 'peacock' },
   { id: 'surya', name: 'Surya', glyph: '☀️', glyphStyle: 'default' },
+  { id: 'kartikeya', name: 'Kartikeya', glyph: '⚔️', glyphStyle: 'rose' },
 ];
 
 export const practices = [
@@ -1563,6 +1564,830 @@ export const practices = [
       { order: 3, instruction: 'Recite each of the nine bija mantras 28 times, moving along the kalashas in order from Surya to Ketu.', mantraRef: 0, estSec: 2700 },
       { order: 4, instruction: 'Perform a small homa (if available) or simply offer sesame and ghee into a flame for each planet.', estSec: 900 },
       { order: 5, instruction: 'Close with the Shanti Path (Asato Ma) and distribute prasad.', estSec: 300 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- foundational / daily prayers
+  {
+    id: 'guru-vandana',
+    type: 'mantra',
+    title: 'Guru Vandana',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Shloka · invocation to the Guru · ~3 min',
+    why: 'The Guru Vandana honours the teacher as Brahma (creator), Vishnu (sustainer) and Shiva (liberator) — recited at the start of study, on Guru Purnima, and to acknowledge one\'s spiritual lineage.',
+    occasions: ['guru-purnima'],
+    calendarLinks: ['thursday'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'गुरुर्ब्रह्मा गुरुर्विष्णुः गुरुर्देवो महेश्वरः।',
+            transliteration: 'Gururbrahmā gururviṣṇuḥ gururdevo maheśvaraḥ,',
+            meaning: 'The Guru is Brahma, the Guru is Vishnu, the Guru is the great lord Shiva;',
+          },
+          {
+            devanagari: 'गुरुः साक्षात् परब्रह्म तस्मै श्रीगुरवे नमः॥',
+            transliteration: 'guruḥ sākṣāt parabrahma tasmai śrīgurave namaḥ.',
+            meaning: 'the Guru is verily the Supreme Brahman — to that revered Guru, I bow.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit quietly and bring to mind your teachers — family, spiritual guides, and all who have shown you the path.', estSec: 30 },
+      { order: 2, instruction: 'Recite the shloka three times with sincerity, bowing inwardly to the Guru.', mantraRef: 0, estSec: 90 },
+      { order: 3, instruction: 'Rest in gratitude for a moment before beginning your study or practice.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'morning-waking-prayers',
+    type: 'stotra',
+    title: 'Morning Waking Prayers',
+    deity: 'vishnu',
+    glyph: '🌅',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Stotra · 2 shlokas · ~3 min · on waking',
+    why: 'Two short verses recited at the very start of the day — the first dedicates the hands (and all the day\'s work) to the divine; the second asks Mother Earth\'s forgiveness before stepping on the ground.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['No materials needed'],
+    mantras: [
+      {
+        label: 'Looking at one\'s palms (Karadarshana)',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'कराग्रे वसते लक्ष्मीः करमध्ये सरस्वती।',
+            transliteration: 'Karāgre vasate Lakṣmīḥ, kara-madhye Sarasvatī,',
+            meaning: 'At the fingertips dwells Lakshmi (wealth); in the middle of the palm Saraswati (knowledge);',
+          },
+          {
+            devanagari: 'करमूले तु गोविन्दः प्रभाते करदर्शनम्॥',
+            transliteration: 'kara-mūle tu Govindaḥ, prabhāte kara-darśanam.',
+            meaning: 'at the base of the hand Govinda (the Lord) — thus in the morning I look upon my hands.',
+          },
+        ],
+      },
+      {
+        label: 'Touching the earth (Bhoomi Vandana)',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'समुद्रवसने देवि पर्वतस्तनमण्डले।',
+            transliteration: 'Samudra-vasane devi parvata-stana-maṇḍale,',
+            meaning: 'O Goddess Earth, robed by the oceans, with mountains for breasts,',
+          },
+          {
+            devanagari: 'विष्णुपत्नि नमस्तुभ्यं पादस्पर्शं क्षमस्वमे॥',
+            transliteration: 'Viṣṇu-patni namastubhyaṃ pāda-sparśaṃ kṣamasva me.',
+            meaning: 'consort of Vishnu — I bow to you; forgive me for touching you with my feet.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Before getting out of bed, hold your hands before your eyes and recite the first verse (Karagre vasate).', mantraRef: 0, estSec: 30 },
+      { order: 2, instruction: 'Before placing your feet on the ground, recite the second verse (Samudra vasane) as a gesture of reverence to Mother Earth.', mantraRef: 1, estSec: 30 },
+      { order: 3, instruction: 'Step out of bed and begin your day with this spirit of gratitude.', estSec: 20 },
+    ],
+  },
+  {
+    id: 'deepa-jyoti',
+    type: 'mantra',
+    title: 'Deepa Jyoti — Lamp Prayer',
+    deity: 'lakshmi',
+    glyph: '🪔',
+    glyphStyle: 'default',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Mantra · lamp invocation · ~3 min',
+    why: 'Recited when lighting the evening lamp at the home shrine, this verse invokes the light as a symbol of auspiciousness, health, prosperity and the removal of hostile thoughts.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['A diya (lamp)', 'Ghee or oil'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'शुभं करोति कल्याणम् आरोग्यं धनसम्पदा।',
+            transliteration: 'Śubhaṃ karoti kalyāṇam ārogyaṃ dhana-sampadā,',
+            meaning: 'O lamp, you bring auspiciousness, wellbeing, health and prosperity;',
+          },
+          {
+            devanagari: 'शत्रुबुद्धिविनाशाय दीपज्योतिर्नमोऽस्तुते॥',
+            transliteration: 'śatru-buddhi-vināśāya dīpa-jyotir namo\'stu te.',
+            meaning: 'and you destroy all hostile and harmful thoughts — I bow to you, O light of the lamp.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Light the diya with a matchstick or ghee wick.', estSec: 30 },
+      { order: 2, instruction: 'Hold the diya gently and recite the verse three times while looking at the flame.', mantraRef: 0, estSec: 90 },
+      { order: 3, instruction: 'Place the lamp before the deity and begin your evening prayers.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'tvameva-mata',
+    type: 'mantra',
+    title: 'Tvameva Mata Cha Pita',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Shloka · complete surrender · ~3 min',
+    why: 'A profound shloka of total surrender, acknowledging God as mother, father, kinsman, friend, knowledge and wealth — everything. Often used as the closing prayer of any worship.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'त्वमेव माता च पिता त्वमेव त्वमेव बन्धुश्च सखा त्वमेव।',
+            transliteration: 'Tvameva mātā cha pitā tvameva, tvameva bandhuś cha sakhā tvameva,',
+            meaning: 'You alone are my mother and father; you alone are my kinsman and friend;',
+          },
+          {
+            devanagari: 'त्वमेव विद्या द्रविणं त्वमेव त्वमेव सर्वं मम देव देव॥',
+            transliteration: 'tvameva vidyā draviṇaṃ tvameva, tvameva sarvaṃ mama deva deva.',
+            meaning: 'you alone are my knowledge and wealth — you are everything to me, O God of gods.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'At the close of your worship, or at any moment of surrender, recite this verse three times.', mantraRef: 0, estSec: 120 },
+      { order: 2, instruction: 'Bow and rest in the feeling of complete refuge.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'kshama-prarthana',
+    type: 'mantra',
+    title: 'Kshama Prarthana',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 2,
+    summary: 'Shloka · forgiveness prayer · ~2 min',
+    why: 'Recited at the very end of any puja to ask the Lord\'s pardon for errors — wrong mantras, incomplete actions, or lack of devotion. It completes worship with humility.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'मन्त्रहीनं क्रियाहीनं भक्तिहीनं सुरेश्वर।',
+            transliteration: 'Mantra-hīnaṃ kriyā-hīnaṃ bhakti-hīnaṃ sureśvara,',
+            meaning: 'O Lord of the gods, whatever worship I have offered — lacking in proper mantras, ritual actions, or devotion —',
+          },
+          {
+            devanagari: 'यत्पूजितं मया देव परिपूर्णं तदस्तु मे॥',
+            transliteration: 'yat-pūjitaṃ mayā deva paripūrṇaṃ tad-astu me.',
+            meaning: 'may you, O Lord, accept it as complete and whole.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'At the very end of your puja or prayer session, recite this verse once or three times.', mantraRef: 0, estSec: 60 },
+      { order: 2, instruction: 'Bow and release the prayer, trusting the Lord\'s grace.', estSec: 30 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- meal prayers
+  {
+    id: 'brahmarpanam',
+    type: 'mantra',
+    title: 'Brahmarpanam — Meal Prayer',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 2,
+    summary: 'Mantra · before meals · ~2 min',
+    why: 'Two verses from the Bhagavad Gita recited before eating — treating the meal as a sacred offering and the act of eating as a yajna (sacrifice). They transform a mundane act into a conscious spiritual one.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['No materials needed'],
+    mantras: [
+      {
+        label: 'Offering the meal (Gita 4.24)',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'ब्रह्मार्पणं ब्रह्म हविर्ब्रह्माग्नौ ब्रह्मणा हुतम्।',
+            transliteration: 'Brahmārpaṇaṃ brahma havir brahmāgnau brahmaṇā hutam,',
+            meaning: 'The act of offering is Brahman, the oblation is Brahman, offered by Brahman into the fire of Brahman;',
+          },
+          {
+            devanagari: 'ब्रह्मैव तेन गन्तव्यं ब्रह्मकर्मसमाधिना॥',
+            transliteration: 'brahmaiva tena gantavyaṃ brahma-karma-samādhinā.',
+            meaning: 'one who sees Brahman in all action reaches Brahman alone.',
+          },
+        ],
+      },
+      {
+        label: 'The inner fire (Gita 15.14)',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'अहं वैश्वानरो भूत्वा प्राणिनां देहमाश्रितः।',
+            transliteration: 'Ahaṃ vaiśvānaro bhūtvā prāṇināṃ deham-āśritaḥ,',
+            meaning: 'Becoming the digestive fire in the bodies of all living beings,',
+          },
+          {
+            devanagari: 'प्राणापानसमायुक्तः पचाम्यन्नं चतुर्विधम्॥',
+            transliteration: 'prāṇāpāna-samāyuktaḥ pachāmy-annaṃ chatur-vidham.',
+            meaning: 'joined with the in-breath and out-breath, I (the Lord) digest the four kinds of food.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Before beginning your meal, pause and fold your hands.', estSec: 10 },
+      { order: 2, instruction: 'Recite the Brahmarpanam verse, offering the meal to the divine.', mantraRef: 0, estSec: 30 },
+      { order: 3, instruction: 'Recite the second verse, recognising the Lord as the inner fire that will digest the food.', mantraRef: 1, estSec: 30 },
+      { order: 4, instruction: 'Begin eating with a sense of gratitude and awareness.', estSec: 10 },
+    ],
+  },
+  {
+    id: 'annapurna-prayer',
+    type: 'mantra',
+    title: 'Annapurna Stuti',
+    deity: 'durga',
+    glyph: 'ॐ',
+    glyphStyle: 'rose',
+    traditionTags: ['shakta', 'universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 2,
+    summary: 'Shloka · gratitude before meals · ~2 min',
+    why: 'A prayer to Annapurna — the goddess who is ever-full of nourishment — thanking her for food and asking for knowledge and detachment. Recited before meals to offer gratitude.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['No materials needed'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'अन्नपूर्णे सदापूर्णे शङ्करप्राणवल्लभे।',
+            transliteration: 'Annapūrṇe sadā-pūrṇe Śaṅkara-prāṇa-vallabhe,',
+            meaning: 'O Annapurna, ever-full, beloved life-breath of Shiva —',
+          },
+          {
+            devanagari: 'ज्ञानवैराग्यसिद्ध्यर्थं भिक्षां देहि च पार्वति॥',
+            transliteration: 'jñāna-vairāgya-siddhyarthaṃ bhikṣāṃ dehi cha Pārvati.',
+            meaning: 'O Parvati, grant me this alms (of food) so that I may attain knowledge and detachment.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Before your meal, fold your hands and recite the verse once or three times.', mantraRef: 0, estSec: 60 },
+      { order: 2, instruction: 'Eat with awareness and gratitude for the goddess\'s nourishment.', estSec: 20 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- more shanti mantras
+  {
+    id: 'sahana-vavatu',
+    type: 'mantra',
+    title: 'Saha Nāvavatu',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Shanti Path · teacher–student harmony · ~3 min',
+    why: 'A peace mantra from the Taittiriya Upanishad, traditionally recited together by teacher and student at the start of a session. It invokes protection, nourishment and vigour for shared learning.',
+    occasions: [],
+    calendarLinks: ['thursday'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'ॐ सह नाववतु। सह नौ भुनक्तु। सह वीर्यं करवावहै।',
+            transliteration: 'Oṃ saha nāv-avatu, saha nau bhunaktu, saha vīryaṃ karavāvahai,',
+            meaning: 'May He protect us both (teacher and student); may He nourish us both; may we work with vigour together;',
+          },
+          {
+            devanagari: 'तेजस्वि नावधीतमस्तु मा विद्विषावहै। ॐ शान्तिः शान्तिः शान्तिः॥',
+            transliteration: 'tejasvi nāv-adhītam-astu, mā vidviṣāvahai. Oṃ śāntiḥ śāntiḥ śāntiḥ.',
+            meaning: 'may our study be brilliant and illuminating; may we never quarrel. Om, peace, peace, peace.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Before beginning a class, teaching session or any shared learning, recite this three times — together if possible.', mantraRef: 0, estSec: 120 },
+      { order: 2, instruction: 'Rest in the triple peace before beginning.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'purnamadah',
+    type: 'mantra',
+    title: 'Purnamadah Purnamidam',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 3,
+    summary: 'Shanti Path · fullness invocation · ~3 min',
+    why: 'A shanti mantra from the Isha Upanishad that meditates on the infinite, undiminished nature of Brahman — whole, complete, inexhaustible. A contemplative opening or closing to any practice.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'ॐ पूर्णमदः पूर्णमिदं पूर्णात्पूर्णमुदच्यते।',
+            transliteration: 'Oṃ pūrṇam-adaḥ pūrṇam-idaṃ pūrṇāt pūrṇam-udacyate,',
+            meaning: 'That (the Absolute) is whole; this (the manifest) is whole. From the whole, the whole arises.',
+          },
+          {
+            devanagari: 'पूर्णस्य पूर्णमादाय पूर्णमेवावशिष्यते॥ ॐ शान्तिः शान्तिः शान्तिः।',
+            transliteration: 'pūrṇasya pūrṇam-ādāya pūrṇam-evāvaśiṣyate. Oṃ śāntiḥ śāntiḥ śāntiḥ.',
+            meaning: 'Take the whole from the whole, and the whole still remains. Om, peace, peace, peace.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit quietly and recite the verse three times, reflecting on the infinite wholeness of the divine.', mantraRef: 0, estSec: 120 },
+      { order: 2, instruction: 'Rest in the silence after the triple peace.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'lokah-samastah',
+    type: 'mantra',
+    title: 'Lokah Samastah Sukhino Bhavantu',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 2,
+    summary: 'Mantra · world-peace prayer · ~2 min',
+    why: 'The briefest universal peace prayer — "May all beings in all worlds be happy and free." Chanted three times to close any practice, yoga session or gathering, opening the heart to the welfare of all.',
+    occasions: [],
+    calendarLinks: ['daily'],
+    materials: ['A quiet space'],
+    mantras: [
+      {
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'लोकाः समस्ताः सुखिनो भवन्तु॥',
+            transliteration: 'Lokāḥ samastāḥ sukhino bhavantu.',
+            meaning: 'May all the worlds — all beings everywhere — be happy and free.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'At the close of your practice or any gathering, chant three times while holding the wish for all beings in your heart.', mantraRef: 0, estSec: 60 },
+      { order: 2, instruction: 'Bow and rest for a moment in that universal goodwill.', estSec: 30 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- more deity mantras
+  {
+    id: 'om-gam-ganapataye',
+    type: 'mantra',
+    title: 'Om Gam Ganapataye Namah · Japa',
+    deity: 'ganesha',
+    glyph: 'ॐ',
+    glyphStyle: 'default',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Bija Mantra · 108 repetitions · ~6 min',
+    why: 'The seed (bija) mantra of Ganesha — compact, potent and beloved. "Gam" is Ganesha\'s own bija syllable. Chanted before any new undertaking, exam, journey or venture to clear the path of obstacles.',
+    occasions: ['new-beginning'],
+    calendarLinks: ['wednesday'],
+    materials: ['A quiet space', 'A mala (optional)'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'ॐ गं गणपतये नमः',
+            transliteration: 'Oṃ Gaṃ Gaṇapataye Namaḥ',
+            meaning: 'Om — salutations to Ganapati (Ganesha), remover of obstacles.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit comfortably, close your eyes, and bring Ganesha to mind.', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times using the japa counter, with steady attention.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Close with a moment of silence and set a clear intention for your undertaking.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'om-namo-narayanaya',
+    type: 'mantra',
+    title: 'Om Namo Narayanaya · Japa',
+    deity: 'vishnu',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['vaishnava', 'universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Mantra · 108 repetitions · ~6 min',
+    why: 'The eight-syllable (ashtakshara) mantra of Vishnu — one of the most ancient and revered Vaishnava mantras. "Narayana" is the all-pervading one who dwells in all hearts. Chanted for protection, inner peace and devotion.',
+    occasions: [],
+    calendarLinks: ['thursday'],
+    materials: ['A quiet space', 'A mala (optional)'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'ॐ नमो नारायणाय',
+            transliteration: 'Oṃ Namo Nārāyaṇāya',
+            meaning: 'Salutations to Narayana — the one who dwells as the inner Self in all beings.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit comfortably and bring Vishnu (Narayana) — the sustainer of all — to mind.', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times with each syllable clear and distinct.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Rest in stillness for a moment after completing the japa.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'krishnaya-vasudevaya',
+    type: 'mantra',
+    title: 'Krishnaya Vasudevaya',
+    deity: 'krishna',
+    glyph: 'ॐ',
+    glyphStyle: 'peacock',
+    traditionTags: ['vaishnava'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Mantra · 108 repetitions · ~6 min',
+    why: 'A devotional mantra to Krishna, son of Vasudeva and the Supreme Self, who destroys the suffering of all who bow to him. Chanted for devotion, inner peace and liberation.',
+    occasions: ['janmashtami'],
+    calendarLinks: ['thursday'],
+    materials: ['A quiet space', 'A mala (optional)'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'कृष्णाय वासुदेवाय हरये परमात्मने।',
+            transliteration: 'Kṛṣṇāya Vāsudevāya haraye paramātmane,',
+            meaning: 'Salutations to Krishna, son of Vasudeva, the Lord who removes all ills, the Supreme Self;',
+          },
+          {
+            devanagari: 'प्रणतक्लेशनाशाय गोविन्दाय नमो नमः॥',
+            transliteration: 'praṇata-kleśa-nāśāya Govindāya namo namaḥ.',
+            meaning: 'to Govinda, destroyer of the suffering of those who bow — salutations again and again.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit comfortably and bring Krishna to mind.', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times with steady devotion.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Close with a moment of gratitude to Krishna.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'ya-devi-sarva-bhuteshu',
+    type: 'mantra',
+    title: 'Ya Devi Sarva Bhuteshu',
+    deity: 'durga',
+    glyph: 'ॐ',
+    glyphStyle: 'rose',
+    traditionTags: ['shakta', 'universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 5,
+    summary: 'Shloka · from the Devi Mahatmya · ~5 min',
+    why: 'A celebrated mantra from the Devi Mahatmya honouring the Goddess who pervades all beings in infinite forms — as power, intelligence, compassion and peace. Chanted during Navratri and Durga Puja.',
+    occasions: ['navratri'],
+    calendarLinks: ['tuesday', 'friday'],
+    materials: ['A quiet space', 'Red flowers (optional)'],
+    mantras: [
+      {
+        label: 'Ya Devi (Devi Mahatmya)',
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'या देवी सर्वभूतेषु शक्तिरूपेण संस्थिता।',
+            transliteration: 'Yā devī sarva-bhūteṣu śakti-rūpeṇa saṃsthitā,',
+            meaning: 'To the Goddess who abides in all beings in the form of power —',
+          },
+          {
+            devanagari: 'नमस्तस्यै नमस्तस्यै नमस्तस्यै नमो नमः॥',
+            transliteration: 'namas-tasyai namas-tasyai namas-tasyai namo namaḥ.',
+            meaning: 'salutations, salutations, salutations again and again.',
+          },
+        ],
+      },
+      {
+        label: 'Sarva Mangala',
+        repetitionTarget: 3,
+        lines: [
+          {
+            devanagari: 'सर्वमङ्गलमाङ्गल्ये शिवे सर्वार्थसाधिके।',
+            transliteration: 'Sarva-maṅgala-māṅgalye śive sarvārtha-sādhike,',
+            meaning: 'O auspiciousness of all that is auspicious, O Shiva\'s consort who accomplishes every aim,',
+          },
+          {
+            devanagari: 'शरण्ये त्र्यम्बके गौरि नारायणि नमोऽस्तु ते॥',
+            transliteration: 'śaraṇye tryambake gauri nārāyaṇi namo\'stu te.',
+            meaning: 'O refuge of all, three-eyed Gauri, Narayani — salutations to you.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit facing an image of the Devi or offer a red flower as you begin.', estSec: 30 },
+      { order: 2, instruction: 'Recite the Ya Devi verse three times, pausing to feel its meaning.', mantraRef: 0, estSec: 120 },
+      { order: 3, instruction: 'Recite the Sarva Mangala verse three times.', mantraRef: 1, estSec: 120 },
+      { order: 4, instruction: 'Close with a bow to the Divine Mother.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'lakshmi-mantra',
+    type: 'mantra',
+    title: 'Om Shrim Mahalakshmyai Namah',
+    deity: 'lakshmi',
+    glyph: 'ॐ',
+    glyphStyle: 'default',
+    traditionTags: ['vaishnava', 'universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Bija Mantra · 108 repetitions · ~6 min',
+    why: 'The bija (seed) mantra of Mahalakshmi using the sacred syllables Shrim and Hrim to invoke her presence. Chanted for prosperity, abundance and the removal of lack. Especially potent on Fridays and during Diwali.',
+    occasions: ['diwali'],
+    calendarLinks: ['friday'],
+    materials: ['A quiet space', 'A mala (optional)', 'A lotus or pink flower (optional)'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'ॐ श्रीं ह्रीं श्रीं कमले कमलालये प्रसीद प्रसीद।',
+            transliteration: 'Oṃ Śrīṃ Hrīṃ Śrīṃ kamale kamalālaye prasīda prasīda,',
+            meaning: 'Om — O Lakshmi, dwelling in the lotus, be gracious, be gracious;',
+          },
+          {
+            devanagari: 'ॐ श्रीं ह्रीं श्रीं महालक्ष्म्यै नमः॥',
+            transliteration: 'Oṃ Śrīṃ Hrīṃ Śrīṃ Mahālakṣmyai Namaḥ.',
+            meaning: 'salutations to Mahalakshmi.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit comfortably on a Friday or auspicious day, facing an image of Lakshmi if available.', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times, holding the intention of abundance and gratitude.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Close with a prayer for the wellbeing of all.', estSec: 30 },
+    ],
+  },
+  {
+    id: 'kartikeya-mantra',
+    type: 'mantra',
+    title: 'Om Sharavanadabhavaya Namah',
+    deity: 'kartikeya',
+    glyph: '⚔️',
+    glyphStyle: 'rose',
+    traditionTags: ['shaiva'],
+    regionTags: ['south', 'universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Mantra · 108 repetitions · ~6 min',
+    why: 'The mantra of Kartikeya (Murugan/Skanda), son of Shiva — chanted for courage, victory over inner enemies and clarity of purpose. Especially beloved in South India.',
+    occasions: [],
+    calendarLinks: [],
+    materials: ['A quiet space', 'A mala (optional)'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'ॐ शरवणभवाय नमः',
+            transliteration: 'Oṃ Śaravaṇa-bhavāya Namaḥ',
+            meaning: 'Salutations to the one born in the reeds (Kartikeya/Murugan) — for courage and victory over inner enemies.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Sit comfortably and bring Kartikeya to mind — young, radiant, bearing the vel (spear).', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times with steady focus.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Close with an intention to overcome whatever obstacles face you.', estSec: 30 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- Surya Gayatri
+  {
+    id: 'surya-gayatri',
+    type: 'mantra',
+    title: 'Surya Gayatri',
+    deity: 'surya',
+    glyph: '☀️',
+    glyphStyle: 'default',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 6,
+    summary: 'Mantra · 108 repetitions · ~6 min',
+    why: 'The Gayatri mantra addressed directly to Surya — for vitality, clarity and health. Chanted at sunrise with Surya Namaskar, on Sundays and during Chhath Puja to invoke the life-giving light.',
+    occasions: ['health', 'energy'],
+    calendarLinks: ['sunday'],
+    materials: ['Face east at sunrise'],
+    mantras: [
+      {
+        repetitionTarget: 108,
+        lines: [
+          {
+            devanagari: 'ॐ भास्कराय विद्महे महद्द्युतिकराय धीमहि।',
+            transliteration: 'Oṃ bhāskarāya vidmahe mahad-dyutikarāya dhīmahi,',
+            meaning: 'We meditate on the radiant Sun, maker of great brilliance;',
+          },
+          {
+            devanagari: 'तन्नो आदित्यः प्रचोदयात्॥',
+            transliteration: 'tanno ādityaḥ prachodayāt.',
+            meaning: 'may that Aditya (the Sun) inspire and illuminate our understanding.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Face east at or near sunrise and settle into a calm, upright posture.', estSec: 30 },
+      { order: 2, instruction: 'Chant the mantra 108 times, holding awareness of the sun\'s light and warmth.', mantraRef: 0, estSec: 300 },
+      { order: 3, instruction: 'Close with a gesture of gratitude to the sun.', estSec: 30 },
+    ],
+  },
+
+  // ---------------------------------------------------------------- more aartis
+  {
+    id: 'sukhkarta-dukhharta',
+    type: 'aarti',
+    title: 'Sukhkarta Dukhharta',
+    deity: 'ganesha',
+    glyph: '🪔',
+    glyphStyle: 'default',
+    traditionTags: ['universal'],
+    regionTags: ['west', 'universal'],
+    difficulty: 'beginner',
+    estDurationMin: 5,
+    summary: 'Aarti · Marathi · by Samarth Ramdas · ~5 min',
+    why: 'The most beloved Ganesh aarti in Maharashtra, composed by Samarth Ramdas. Sung at the start of Ganesh Chaturthi and all Ganesha worship, it celebrates the Lord who creates joy and removes every sorrow.',
+    occasions: ['new-beginning'],
+    calendarLinks: ['wednesday'],
+    materials: ['A diya (lamp)', 'Modak or sweets (optional)'],
+    mantras: [
+      {
+        label: 'Refrain',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'जय देव जय देव जय मंगलमूर्ती। दर्शनमात्रे मनकामना पुरती॥',
+            transliteration: 'Jaya deva jaya deva jaya maṅgala-mūrtī, darśana-mātre mana-kāmanā puratī.',
+            meaning: 'Victory, victory to you, O auspicious Lord (Mangalamurti) — merely by your sight, the heart\'s desires are fulfilled.',
+          },
+        ],
+      },
+      {
+        label: 'Verses',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'सुखकर्ता दुखहर्ता वार्ता विघ्नाची। नुरवी पुरवी प्रेम कृपा जयाची॥\nसर्वांगी सुंदर उटी शेंदुराची। कंठी झळके माळ मुक्ताफळांची॥',
+            transliteration: 'Sukha-kartā dukha-hartā vārtā vighnāchī, nuravī puravī prema kṛpā jayāchī,\nsarvāṅgī sundara uṭī śendurāchī, kaṇṭhī jhaḷake māḷa muktā-phaḷāñchī.',
+            meaning: 'O Maker of joy, Remover of sorrow, dispeller of obstacles — whose love and grace fulfil all wishes; whose form is beautiful, smeared with vermilion; a pearl garland gleaming at your throat.',
+          },
+          {
+            devanagari: 'रत्नखचित फरा तुज गौरीकुमरा। चंदनाची उटी कुमकुमकेशरा॥\nहिरेजडित मुकुट शोभतो बरा। रुणझुणती नुपुरे चरणी घागरा॥',
+            transliteration: 'Ratna-khacita pharā tuja gaurī-kumarā, candanāchī uṭī kumkuma-keśarā,\nhire-jaḍita mukuṭa śobhato barā, ruṇajhuṇatī nupure caraṇī ghāgarā.',
+            meaning: 'O son of Gauri, your diadem is jewel-encrusted; you are anointed with sandal, kumkum and saffron; a diamond-studded crown shines on your head; anklet-bells tinkle at your feet.',
+          },
+          {
+            devanagari: 'लम्बोदर पीतांबर फणिवर बंधना। सरळ सोंड वक्रतुंड त्रिनयना॥\nदास रामाचा वाट पाहे सदना। संकटी पावावे निर्वाणी रक्षावे सुरवरवंदना॥',
+            transliteration: 'Lambodara pītāmbara phaṇivara bandhanā, saraḷa soṇḍa vakratuṇḍa trinayaṇā,\ndāsa rāmācā vāṭa pāhe sadanā, saṅkaṭī pāvāve nirvāṇī rakṣāve suravara-vandanā.',
+            meaning: 'O large-bellied one, clad in yellow, girdled with the serpent-king; with a straight or curved trunk, three-eyed; your servant awaits at the door — come in distress, protect in liberation, O one revered by the gods.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Light the lamp before an image of Ganesha.', estSec: 20 },
+      { order: 2, instruction: 'Sing the refrain, then each verse, circling the lamp slowly before the deity.', mantraRef: 0, estSec: 240 },
+      { order: 3, instruction: 'Return to the refrain to close, offer the light to your forehead, and bow.', estSec: 40 },
+    ],
+  },
+  {
+    id: 'saraswati-aarti',
+    type: 'aarti',
+    title: 'Jai Saraswati Mata',
+    deity: 'saraswati',
+    glyph: '🪔',
+    glyphStyle: 'peacock',
+    traditionTags: ['universal'],
+    regionTags: ['universal'],
+    difficulty: 'beginner',
+    estDurationMin: 5,
+    summary: 'Aarti · ~5 min · Saraswati',
+    why: 'The aarti to Mother Saraswati, goddess of knowledge, music and the arts — sung on Vasant Panchami, before exams, and at the start of an academic year to invoke clarity and creativity.',
+    occasions: ['exams', 'starting-studies'],
+    calendarLinks: [],
+    materials: ['A diya (lamp)', 'White or yellow flowers', 'Books or an instrument (optional)'],
+    mantras: [
+      {
+        label: 'Refrain',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'जय सरस्वती माता, मैया जय सरस्वती माता।\nसदगुण वैभव शालिनी, त्रिभुवन विख्याता॥',
+            transliteration: 'Jaya Sarasvatī mātā, maiyā jaya Sarasvatī mātā,\nsad-guṇa vaibhava śālinī, tribhuvana vikhyātā.',
+            meaning: 'Victory to you, Mother Saraswati — adorned with noble virtues and splendour, renowned in all three worlds.',
+          },
+        ],
+      },
+      {
+        label: 'Verses',
+        repetitionTarget: null,
+        lines: [
+          {
+            devanagari: 'चन्द्रवदनी पद्मासिनी, द्युति मंगलकारी।\nसोहे शुभ हंस सवारी, अतुल तेजधारी॥',
+            transliteration: 'Candravadanī padmāsinī, dyuti maṃgalakārī,\nsohe śubha haṃsa savārī, atula teja-dhārī.',
+            meaning: 'Moon-faced, lotus-seated, radiant and auspicious; riding the graceful swan, bearing incomparable light.',
+          },
+          {
+            devanagari: 'बाईं कर में वीणा सोहे, दाईं कर माला।\nशीश मुकुट मणि सोहत, गल मोतिन माला॥',
+            transliteration: 'Bāīṃ kara meṃ vīṇā sohe, dāīṃ kara mālā,\nśīśa mukuṭa maṇi sohata, gala motina mālā.',
+            meaning: 'In your left hand the veena shines; in your right a rosary. A jewelled crown adorns your head, a pearl garland your throat.',
+          },
+          {
+            devanagari: 'विद्या ज्ञान प्रदायिनी, ज्ञान प्रकाश भरो।\nमोह अज्ञान और तिमिर का जग से नाश करो॥',
+            transliteration: 'Vidyā jñāna pradāyinī, jñāna prakāśa bharo,\nmoha ajñāna aura timira kā jaga se nāśa karo.',
+            meaning: 'O bestower of learning and wisdom, fill us with the light of knowledge; destroy delusion, ignorance and the darkness of the world.',
+          },
+          {
+            devanagari: 'धूप, दीप, फल, मेवा, माँ स्वीकार करो।\nज्ञानचक्षु दे माता, जग निस्तार करो॥',
+            transliteration: 'Dhūpa, dīpa, phala, mevā, māṃ svīkāra karo,\njñāna-cakṣu de mātā, jaga nistāra karo.',
+            meaning: 'Accept our offering of incense, lamp, fruit and sweets, O Mother; grant us the eye of wisdom and liberate the world.',
+          },
+          {
+            devanagari: 'माँ सरस्वती की आरती जो कोई नर गावे।\nहितकारी सुखकारी ज्ञान भक्ति पावे॥',
+            transliteration: 'Māṃ Sarasvatī kī āratī jo koī nara gāve,\nhitakārī sukhakārī jñāna bhakti pāve.',
+            meaning: 'Whoever sings this aarti to Mother Saraswati gains wisdom, devotion, benefit and happiness.',
+          },
+        ],
+      },
+    ],
+    steps: [
+      { order: 1, instruction: 'Light a lamp before an image of Saraswati and offer white or yellow flowers.', estSec: 30 },
+      { order: 2, instruction: 'Sing the refrain and verses, circling the lamp slowly before the deity.', mantraRef: 0, estSec: 240 },
+      { order: 3, instruction: 'Offer the light to your forehead, bow, and place your books or pen before the image as an offering.', estSec: 40 },
     ],
   },
 ];
