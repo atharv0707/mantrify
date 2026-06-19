@@ -17,6 +17,19 @@ This repo contains a working implementation of the MVP described in the design d
 
 ---
 
+## Test accounts
+
+Two accounts are pre-seeded for development:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@mantrify.app` | `password` |
+| User | `user@mantrify.app` | `password` |
+
+The admin account has full CRUD access to the practice library via `/v1/admin/*`.
+
+---
+
 ## Running locally
 
 You need **two terminal windows** running at the same time: one for the backend, one for the app.
