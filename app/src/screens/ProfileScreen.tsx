@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '../components/Screen';
 import { LanguageToggle } from '../components/LanguageToggle';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
 import { api } from '../api/client';
+import { useAuth } from '../auth/AuthContext';
 import type { Profile } from '../api/types';
 
 const TRADITION_LABELS: Record<string, string> = {
@@ -25,6 +26,7 @@ const REGION_LABELS: Record<string, string> = {
 
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
+  const { signOut } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const load = useCallback(async () => {
@@ -88,10 +90,22 @@ export default function ProfileScreen() {
         <Text style={styles.setLabel}>Favourites</Text>
         <Text style={styles.setValue}>{profile.favouritesCount} ›</Text>
       </Pressable>
-      <Pressable style={[styles.setRow, styles.lastRow]}>
+      <Pressable style={styles.setRow}>
         <Text style={styles.icon}>📿</Text>
         <Text style={styles.setLabel}>History & streaks</Text>
         <Text style={styles.setValue}>›</Text>
+      </Pressable>
+      <Pressable
+        style={[styles.setRow, styles.lastRow, styles.signOutRow]}
+        onPress={() =>
+          Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Sign Out', style: 'destructive', onPress: signOut },
+          ])
+        }
+      >
+        <Text style={styles.icon}>🚪</Text>
+        <Text style={[styles.setLabel, styles.signOutLabel]}>Sign Out</Text>
       </Pressable>
     </Screen>
   );
@@ -152,6 +166,12 @@ const styles = StyleSheet.create({
   },
   lastRow: {
     borderBottomWidth: 0,
+  },
+  signOutRow: {
+    marginTop: 8,
+  },
+  signOutLabel: {
+    color: '#b71c1c',
   },
   languageRow: {
     flexDirection: 'column',

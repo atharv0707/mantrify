@@ -20,6 +20,7 @@ import {
 } from '@expo-google-fonts/noto-serif-devanagari';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AppProvider } from './src/context/AppContext';
+import { AuthProvider } from './src/auth/AuthContext';
 import { colors } from './src/theme/colors';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -43,9 +44,11 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.paper }} onLayout={onLayout}>
-      <AppProvider>
-        <AppNavigator />
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <AppNavigator />
+        </AppProvider>
+      </AuthProvider>
       <StatusBar style="dark" />
     </View>
   );

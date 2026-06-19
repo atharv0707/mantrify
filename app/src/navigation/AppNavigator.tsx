@@ -1,11 +1,13 @@
 import React from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/typography';
-import type { RootStackParamList, TabParamList } from './types';
+import { useAuth } from '../auth/AuthContext';
+import type { RootStackParamList, TabParamList, AuthStackParamList } from './types';
 
 import TodayScreen from '../screens/TodayScreen';
 import CalendarScreen from '../screens/CalendarScreen';
@@ -15,8 +17,15 @@ import RoutineScreen from '../screens/RoutineScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PracticeGuideScreen from '../screens/PracticeGuideScreen';
 
+import SignInScreen from '../screens/auth/SignInScreen';
+import SignUpScreen from '../screens/auth/SignUpScreen';
+import VerifyEmailScreen from '../screens/auth/VerifyEmailScreen';
+import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
+
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 const TAB_ICONS: Record<keyof TabParamList, keyof typeof Feather.glyphMap> = {
   Today: 'home',
@@ -59,6 +68,31 @@ function MainTabs() {
   );
 }
 
+function AppStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Main" component={MainTabs} />
+      <Stack.Screen
+        name="PracticeGuide"
+        component={PracticeGuideScreen}
+        options={{ presentation: 'card' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function AuthNavigator() {
+  return (
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="SignIn" component={SignInScreen} />
+      <AuthStack.Screen name="SignUp" component={SignUpScreen} />
+      <AuthStack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
+      <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
 const navTheme = {
   ...DefaultTheme,
   colors: {
@@ -72,16 +106,19 @@ const navTheme = {
 };
 
 export default function AppNavigator() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.paper, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator color={colors.saffron} />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Main" component={MainTabs} />
-        <Stack.Screen
-          name="PracticeGuide"
-          component={PracticeGuideScreen}
-          options={{ presentation: 'card' }}
-        />
-      </Stack.Navigator>
+      {user ? <AppStack /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }

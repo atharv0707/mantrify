@@ -14,6 +14,14 @@ export type RootStackParamList = {
   PracticeGuide: { practiceId: string };
 };
 
+export type AuthStackParamList = {
+  SignIn: undefined;
+  SignUp: undefined;
+  VerifyEmail: { email: string };
+  ForgotPassword: { email?: string };
+  ResetPassword: { email: string };
+};
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}

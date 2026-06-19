@@ -117,10 +117,34 @@ export interface DayDetailResponse {
 export interface Profile {
   id: string;
   name: string;
+  email: string | null;
+  role: 'user' | 'admin';
+  emailVerified: boolean;
+  avatarUrl: string | null;
   language: string;
   tradition: string;
   region: string;
   experience: string;
   streak: number;
   favouritesCount: number;
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string | null;
+  role: 'user' | 'admin';
+  emailVerified: boolean;
+  avatarUrl: string | null;
+  language: string;
+  tradition: string;
+  region: string;
+  experience: string;
+  streak: number;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
 }
