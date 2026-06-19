@@ -46,7 +46,8 @@ export default function SignInScreen() {
   }
 
   async function handleSignIn() {
-    if (!email.trim() || !password) return;
+    if (!email.trim()) return setError('Please enter your email.');
+    if (!password) return setError('Please enter your password.');
     setLoading(true);
     setError(null);
     try {
@@ -57,8 +58,10 @@ export default function SignInScreen() {
         navigation.navigate('VerifyEmail', { email: email.trim() });
       } else if (e.code === 'invalid_credentials') {
         setError('Incorrect email or password.');
+      } else if (e instanceof TypeError || e.message?.includes('Network')) {
+        setError('Cannot reach the server. Make sure the backend is running and your device is on the same network.');
       } else {
-        setError('Something went wrong. Please try again.');
+        setError(`Sign in failed (${e.code ?? e.status ?? 'unknown'}). Check the backend logs.`);
       }
     } finally {
       setLoading(false);

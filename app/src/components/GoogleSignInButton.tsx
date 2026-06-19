@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Platform, Pressable, StyleSheet, Text } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { colors, radii } from '../theme/colors';
@@ -11,10 +11,10 @@ const WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
 const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ?? '';
 const ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID ?? '';
 
-function isConfigured() {
-  if (Platform.OS === 'ios') return !!IOS_CLIENT_ID;
-  if (Platform.OS === 'android') return !!ANDROID_CLIENT_ID;
-  return !!WEB_CLIENT_ID;
+function platformClientId() {
+  if (Platform.OS === 'ios') return IOS_CLIENT_ID;
+  if (Platform.OS === 'android') return ANDROID_CLIENT_ID;
+  return WEB_CLIENT_ID;
 }
 
 interface Props {
@@ -23,9 +23,9 @@ interface Props {
   label?: string;
 }
 
-// Inner component — the hook only runs when this component is mounted,
-// which only happens when the platform-specific client ID is present.
-function GoogleButtonInner({ disabled, onToken, label }: Props) {
+// Inner component — the useAuthRequest hook only runs when this mounts,
+// which only happens when the platform client ID is actually set.
+function GoogleButtonConfigured({ disabled, onToken, label }: Props) {
   const [, response, promptAsync] = Google.useAuthRequest({
     clientId: WEB_CLIENT_ID || undefined,
     iosClientId: IOS_CLIENT_ID || undefined,
@@ -42,17 +42,35 @@ function GoogleButtonInner({ disabled, onToken, label }: Props) {
   }, [response, handleToken]);
 
   return (
-    <Pressable style={styles.btn} onPress={() => promptAsync()} disabled={disabled}>
-      <Text style={styles.text}>{label}</Text>
+    <Pressable style={[styles.btn, disabled && styles.btnDisabled]} onPress={() => promptAsync()} disabled={disabled}>
+      <Text style={styles.text}>{label ?? 'Continue with Google'}</Text>
     </Pressable>
   );
 }
 
-// Public export: only mounts the inner component (and thus the hook) when
-// the platform has a configured client ID.
+// Fallback shown when no OAuth client IDs are configured.
+function GoogleButtonUnconfigured({ label }: Pick<Props, 'label'>) {
+  return (
+    <Pressable
+      style={styles.btn}
+      onPress={() =>
+        Alert.alert(
+          'Google Sign-In Not Configured',
+          'Add your Google OAuth client IDs to the app .env file:\n\nEXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID\nEXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID\nEXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID',
+          [{ text: 'OK' }]
+        )
+      }
+    >
+      <Text style={[styles.text, styles.textMuted]}>{label ?? 'Continue with Google'}</Text>
+    </Pressable>
+  );
+}
+
 export function GoogleSignInButton(props: Props) {
-  if (!isConfigured()) return null;
-  return <GoogleButtonInner {...props} label={props.label ?? 'Continue with Google'} />;
+  if (platformClientId()) {
+    return <GoogleButtonConfigured {...props} />;
+  }
+  return <GoogleButtonUnconfigured label={props.label} />;
 }
 
 const styles = StyleSheet.create({
@@ -64,5 +82,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.card,
   },
+  btnDisabled: { opacity: 0.5 },
   text: { fontFamily: fonts.sansMedium, fontSize: 14.5, color: colors.ink },
+  textMuted: { color: colors.muted },
 });
