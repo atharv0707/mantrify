@@ -70,7 +70,7 @@ export default function RoutineScreen() {
       await api.updateRoutineItem(editing.item.id, {
         timeOfDay: editing.timeOfDay.trim() || undefined,
         days: editing.days,
-        titleOverride: undefined,
+        group: editing.group,
       });
       // update group requires a separate field; patch locally and re-fetch
       setItems(items.map((i) =>

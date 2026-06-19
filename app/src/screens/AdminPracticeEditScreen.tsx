@@ -139,20 +139,40 @@ export default function AdminPracticeEditScreen() {
     })();
   }, [practiceId]);
 
-  const set = (key: keyof FormState) => (val: string) => setForm((f) => ({ ...f, [key]: val }));
+  function slugify(title: string) {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  const set = (key: keyof FormState) => (val: string) => {
+    setForm((f) => {
+      const next = { ...f, [key]: val };
+      // Auto-generate ID from title for new practices (user can still override)
+      if (key === 'title' && isNew) {
+        next.id = slugify(val);
+      }
+      return next;
+    });
+  };
 
   const save = async () => {
     if (!form.title.trim()) return Alert.alert('Validation', 'Title is required.');
-    if (!form.id.trim() && isNew) return Alert.alert('Validation', 'ID is required (lowercase, hyphens only).');
+
+    const id = form.id.trim() || slugify(form.title.trim());
+    if (!id) return Alert.alert('Validation', 'Title must contain at least some letters.');
 
     const csvToArr = (s: string) => s.split(',').map((x) => x.trim()).filter(Boolean);
 
     const payload = {
-      id: form.id.trim(),
+      id,
       title: form.title.trim(),
       type: form.type,
       deity: form.deity.trim(),
-      glyph: form.glyph.trim(),
+      glyph: form.glyph.trim() || '🕉️',
       glyphStyle: form.glyphStyle,
       difficulty: form.difficulty,
       estDurationMin: parseInt(form.estDurationMin) || 5,
@@ -170,14 +190,20 @@ export default function AdminPracticeEditScreen() {
     try {
       if (isNew) {
         await adminRequest('/v1/admin/practices', { method: 'POST', body: JSON.stringify(payload) });
-        Alert.alert('Created', `"${payload.title}" added to the library.`);
+        Alert.alert('Created', `"${payload.title}" added to the library.`, [
+          { text: 'OK', onPress: () => navigation.goBack() },
+        ]);
       } else {
         await adminRequest(`/v1/admin/practices/${practiceId}`, { method: 'PUT', body: JSON.stringify(payload) });
-        Alert.alert('Saved', 'Practice updated.');
+        Alert.alert('Saved', 'Practice updated.', [
+          { text: 'OK', onPress: () => navigation.goBack() },
+        ]);
       }
-      navigation.goBack();
     } catch (e: any) {
-      Alert.alert('Error', e.code === 'id_taken' ? 'That ID is already taken.' : 'Could not save practice.');
+      const msg = e.code === 'id_taken'
+        ? `ID "${payload.id}" is already taken. Change the title or edit the ID field.`
+        : `Could not save: ${e.code ?? e.message ?? 'unknown error'}`;
+      Alert.alert('Error', msg);
     } finally {
       setSaving(false);
     }
@@ -208,9 +234,10 @@ export default function AdminPracticeEditScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {isNew && (
-          <Field label="ID (unique, lowercase, hyphens — e.g. gayatri-mantra)">
+          <Field label="ID — auto-generated from title, edit if needed">
             <TextInput style={styles.input} value={form.id} onChangeText={set('id')}
-              placeholder="practice-id" placeholderTextColor={colors.faint} autoCapitalize="none" />
+              placeholder="auto-generated" placeholderTextColor={colors.faint} autoCapitalize="none"
+              autoCorrect={false} />
           </Field>
         )}
 

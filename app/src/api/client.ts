@@ -131,7 +131,7 @@ export const api = {
   getRoutine: () => auth<{ items: RoutineItem[] }>('/v1/me/routine'),
   addRoutineItem: (body: { practiceId: string; titleOverride?: string; timeOfDay?: string; days?: number[]; reminder?: boolean; group?: string }) =>
     auth<{ id: number }>('/v1/me/routine', { method: 'POST', body: JSON.stringify(body) }),
-  updateRoutineItem: (id: number, body: Partial<{ reminder: boolean; timeOfDay: string; days: number[]; titleOverride: string }>) =>
+  updateRoutineItem: (id: number, body: Partial<{ reminder: boolean; timeOfDay: string; days: number[]; titleOverride: string; group: string }>) =>
     auth<{ ok: true }>(`/v1/me/routine/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteRoutineItem: (id: number) => auth<{ ok: true }>(`/v1/me/routine/${id}`, { method: 'DELETE' }),
 

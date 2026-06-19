@@ -582,17 +582,19 @@ app.put('/v1/me/routine/:id', requireAuth, (req, res) => {
   const item = db.prepare('SELECT * FROM routine_items WHERE id = ? AND user_id = ?').get(id, userId);
   if (!item) return res.status(404).json({ error: 'not_found' });
 
-  const { reminder, timeOfDay, days, titleOverride } = req.body;
+  const { reminder, timeOfDay, days, titleOverride, group } = req.body;
   db.prepare(`UPDATE routine_items SET
     reminder = COALESCE(?, reminder),
     time_of_day = COALESCE(?, time_of_day),
     days = COALESCE(?, days),
-    title_override = COALESCE(?, title_override)
+    title_override = COALESCE(?, title_override),
+    group_name = COALESCE(?, group_name)
     WHERE id = ?`).run(
     reminder === undefined ? null : (reminder ? 1 : 0),
     timeOfDay ?? null,
     days ? JSON.stringify(days) : null,
     titleOverride ?? null,
+    group ?? null,
     id
   );
   res.json({ ok: true });
