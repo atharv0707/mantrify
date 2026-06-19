@@ -11,24 +11,17 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { authApi } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
+import { GoogleSignInButton } from '../../components/GoogleSignInButton';
 import { colors, radii } from '../../theme/colors';
 import { fonts } from '../../theme/typography';
 import type { AuthStackParamList } from '../../navigation/types';
 
-WebBrowser.maybeCompleteAuthSession();
-
 type Nav = NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
-
-const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '';
-const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ?? '';
-const GOOGLE_ANDROID_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID ?? '';
 
 export default function SignUpScreen() {
   const navigation = useNavigation<Nav>();
@@ -40,19 +33,6 @@ export default function SignUpScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const [, googleResponse, promptGoogleAsync] = Google.useAuthRequest({
-    clientId: GOOGLE_CLIENT_ID || undefined,
-    iosClientId: GOOGLE_IOS_CLIENT_ID || undefined,
-    androidClientId: GOOGLE_ANDROID_CLIENT_ID || undefined,
-  });
-
-  React.useEffect(() => {
-    if (googleResponse?.type === 'success') {
-      const accessToken = googleResponse.authentication?.accessToken;
-      if (accessToken) handleGoogleToken(accessToken);
-    }
-  }, [googleResponse]);
 
   async function handleGoogleToken(accessToken: string) {
     setLoading(true);
@@ -192,13 +172,7 @@ export default function SignUpScreen() {
             <View style={styles.divLine} />
           </View>
 
-          <Pressable
-            style={styles.ssoBtn}
-            onPress={() => promptGoogleAsync()}
-            disabled={loading || !GOOGLE_CLIENT_ID}
-          >
-            <Text style={styles.ssoBtnText}>Continue with Google</Text>
-          </Pressable>
+          <GoogleSignInButton onToken={handleGoogleToken} disabled={loading} label="Continue with Google" />
 
           {Platform.OS === 'ios' && (
             <AppleAuthentication.AppleAuthenticationButton
@@ -256,15 +230,6 @@ const styles = StyleSheet.create({
   divider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 28 },
   divLine: { flex: 1, height: 1, backgroundColor: colors.line },
   divText: { fontFamily: fonts.sans, fontSize: 12, color: colors.faint },
-  ssoBtn: {
-    borderRadius: radii.sm,
-    borderWidth: 1.5,
-    borderColor: colors.line,
-    paddingVertical: 14,
-    alignItems: 'center',
-    backgroundColor: colors.card,
-  },
-  ssoBtnText: { fontFamily: fonts.sansMedium, fontSize: 14.5, color: colors.ink },
   appleBtn: { height: 50, marginTop: 12 },
   footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' },
   footerText: { fontFamily: fonts.sans, fontSize: 14, color: colors.muted },

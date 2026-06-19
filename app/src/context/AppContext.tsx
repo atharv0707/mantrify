@@ -1,6 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { api } from '../api/client';
-import { useAuth } from '../auth/AuthContext';
 
 export type Language = 'en' | 'hi' | 'both';
 
@@ -15,17 +14,17 @@ interface AppContextValue {
 const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
   const [language, setLanguage] = useState<Language>('both');
   const [favouriteIds, setFavouriteIds] = useState<Set<string>>(new Set());
 
   const reloadFavourites = useCallback(async () => {
-    if (!user) { setFavouriteIds(new Set()); return; }
     try {
       const res = await api.getFavourites();
       setFavouriteIds(new Set(res.items.map((p) => p.id)));
-    } catch {}
-  }, [user]);
+    } catch {
+      // 401 when not authenticated — leave set empty
+    }
+  }, []);
 
   useEffect(() => {
     reloadFavourites();
