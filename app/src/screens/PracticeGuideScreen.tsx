@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Screen } from '../components/Screen';
 import { Panel } from '../components/Panel';
@@ -35,6 +35,10 @@ export default function PracticeGuideScreen() {
   const [done, setDone] = useState(false);
   const [showAllMeanings, setShowAllMeanings] = useState(false);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addTime, setAddTime] = useState('');
+  const [addGroup, setAddGroup] = useState<'morning' | 'evening' | 'other'>('morning');
+  const [addSaving, setAddSaving] = useState(false);
 
   const load = useCallback(async () => {
     const res = await api.getPractice(practiceId);
@@ -69,6 +73,25 @@ export default function PracticeGuideScreen() {
     setDone(true);
     await api.setCompletion({ practiceId: practice.id, date: todayStr(), done: true });
     navigation.goBack();
+  };
+
+  const addToRoutine = async () => {
+    setAddSaving(true);
+    try {
+      await api.addRoutineItem({
+        practiceId: practice.id,
+        timeOfDay: addTime.trim() || undefined,
+        group: addGroup,
+      });
+      setShowAddModal(false);
+      setAddTime('');
+      setAddGroup('morning');
+      Alert.alert('Added', `"${practice.title}" added to your ${addGroup} routine.`);
+    } catch {
+      Alert.alert('Error', 'Could not add to routine.');
+    } finally {
+      setAddSaving(false);
+    }
   };
 
   // The japa counter follows the first section that defines a repetition target.
@@ -181,9 +204,52 @@ export default function PracticeGuideScreen() {
         </Panel>
       )}
 
-      <Pressable style={styles.markDone} onPress={markDone} disabled={done}>
-        <Text style={styles.markDoneText}>{done ? 'Marked as done' : 'Mark as done'}</Text>
-      </Pressable>
+      <View style={styles.bottomActions}>
+        <Pressable style={styles.addRoutineBtn} onPress={() => setShowAddModal(true)}>
+          <Feather name="plus-circle" size={15} color={colors.saffronDeep} />
+          <Text style={styles.addRoutineText}>Add to routine</Text>
+        </Pressable>
+        <Pressable style={styles.markDone} onPress={markDone} disabled={done}>
+          <Text style={styles.markDoneText}>{done ? 'Marked as done' : 'Mark as done'}</Text>
+        </Pressable>
+      </View>
+
+      <Modal visible={showAddModal} animationType="slide" transparent presentationStyle="overFullScreen">
+        <Pressable style={styles.backdrop} onPress={() => setShowAddModal(false)} />
+        <View style={styles.sheet}>
+          <View style={styles.sheetHandle} />
+          <Text style={styles.sheetTitle}>Add to Routine</Text>
+          <Text style={styles.sheetSub}>{practice.title}</Text>
+
+          <Text style={styles.fieldLabel}>Group</Text>
+          <View style={styles.segmented}>
+            {(['morning', 'evening', 'other'] as const).map((g) => (
+              <Pressable
+                key={g}
+                style={[styles.seg, addGroup === g && styles.segActive]}
+                onPress={() => setAddGroup(g)}
+              >
+                <Text style={[styles.segText, addGroup === g && styles.segTextActive]}>
+                  {g.charAt(0).toUpperCase() + g.slice(1)}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+
+          <Text style={styles.fieldLabel}>Time of day (optional)</Text>
+          <TextInput
+            style={styles.fieldInput}
+            value={addTime}
+            onChangeText={setAddTime}
+            placeholder="e.g. 6:00 AM"
+            placeholderTextColor={colors.faint}
+          />
+
+          <Pressable style={styles.saveBtn} onPress={addToRoutine} disabled={addSaving}>
+            <Text style={styles.saveBtnText}>{addSaving ? 'Adding…' : 'Add to Routine'}</Text>
+          </Pressable>
+        </View>
+      </Modal>
     </Screen>
   );
 }
@@ -414,16 +480,63 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: colors.ink,
   },
+  bottomActions: { gap: 10, marginTop: 6 },
+  addRoutineBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderWidth: 1.5,
+    borderColor: colors.saffron,
+    borderRadius: 15,
+    paddingVertical: 13,
+  },
+  addRoutineText: { fontFamily: fonts.sansSemiBold, fontSize: 14, color: colors.saffronDeep },
   markDone: {
     backgroundColor: colors.saffron,
     borderRadius: 15,
     paddingVertical: 15,
     alignItems: 'center',
-    marginTop: 6,
   },
-  markDoneText: {
-    color: '#2a1605',
-    fontFamily: fonts.sansBold,
-    fontSize: 14.5,
+  markDoneText: { color: '#2a1605', fontFamily: fonts.sansBold, fontSize: 14.5 },
+  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
+  sheet: {
+    backgroundColor: colors.paper,
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
+    padding: 24,
+    paddingBottom: 40,
   },
+  sheetHandle: {
+    width: 38, height: 4, borderRadius: 2, backgroundColor: colors.line,
+    alignSelf: 'center', marginBottom: 20,
+  },
+  sheetTitle: { fontFamily: fonts.serif, fontSize: 18, color: colors.ink },
+  sheetSub: { fontFamily: fonts.sans, fontSize: 13, color: colors.muted, marginBottom: 20, marginTop: 4 },
+  fieldLabel: { fontFamily: fonts.sansMedium, fontSize: 12, color: colors.muted, marginBottom: 6 },
+  segmented: { flexDirection: 'row', gap: 8, marginBottom: 18 },
+  seg: {
+    flex: 1, borderRadius: 10, borderWidth: 1, borderColor: colors.line,
+    paddingVertical: 9, alignItems: 'center', backgroundColor: colors.card,
+  },
+  segActive: { backgroundColor: colors.saffron, borderColor: colors.saffron },
+  segText: { fontFamily: fonts.sansMedium, fontSize: 13, color: colors.muted },
+  segTextActive: { color: '#fff' },
+  fieldInput: {
+    backgroundColor: colors.card,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.line,
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    fontFamily: fonts.sans,
+    fontSize: 15,
+    color: colors.ink,
+    marginBottom: 20,
+  },
+  saveBtn: {
+    backgroundColor: colors.saffron, borderRadius: 14,
+    paddingVertical: 15, alignItems: 'center',
+  },
+  saveBtnText: { fontFamily: fonts.sansSemiBold, fontSize: 15, color: '#fff' },
 });

@@ -17,6 +17,8 @@ import RoutineScreen from '../screens/RoutineScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PracticeGuideScreen from '../screens/PracticeGuideScreen';
 
+import AdminScreen from '../screens/AdminScreen';
+import AdminPracticeEditScreen from '../screens/AdminPracticeEditScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
 import VerifyEmailScreen from '../screens/auth/VerifyEmailScreen';
@@ -72,11 +74,9 @@ function AppStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={MainTabs} />
-      <Stack.Screen
-        name="PracticeGuide"
-        component={PracticeGuideScreen}
-        options={{ presentation: 'card' }}
-      />
+      <Stack.Screen name="PracticeGuide" component={PracticeGuideScreen} options={{ presentation: 'card' }} />
+      <Stack.Screen name="Admin" component={AdminScreen} options={{ presentation: 'card' }} />
+      <Stack.Screen name="AdminPracticeEdit" component={AdminPracticeEditScreen} options={{ presentation: 'card' }} />
     </Stack.Navigator>
   );
 }

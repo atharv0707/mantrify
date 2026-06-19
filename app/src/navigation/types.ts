@@ -12,6 +12,8 @@ export type TabParamList = {
 export type RootStackParamList = {
   Main: NavigatorScreenParams<TabParamList>;
   PracticeGuide: { practiceId: string };
+  Admin: undefined;
+  AdminPracticeEdit: { practiceId?: string };
 };
 
 export type AuthStackParamList = {

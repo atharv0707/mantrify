@@ -9,36 +9,19 @@ import { api } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import type { Profile } from '../api/types';
 
-const TRADITION_LABELS: Record<string, string> = {
-  vaishnava: 'Vaishnava',
-  shaiva: 'Shaiva',
-  shakta: 'Shakta',
-  smarta: 'Smarta',
-};
-
-const REGION_LABELS: Record<string, string> = {
-  north: 'North',
-  south: 'South',
-  east: 'East',
-  west: 'West',
-  universal: 'Universal',
-};
-
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const load = useCallback(async () => {
-    const res = await api.getProfile();
-    setProfile(res);
+    try {
+      const res = await api.getProfile();
+      setProfile(res);
+    } catch {}
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      load();
-    }, [load])
-  );
+  useFocusEffect(useCallback(() => { load(); }, [load]));
 
   if (!profile) {
     return (
@@ -58,21 +41,15 @@ export default function ProfileScreen() {
 
       <View style={styles.profHead}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{profile.name[0]}</Text>
+          <Text style={styles.avatarText}>{profile.name[0].toUpperCase()}</Text>
         </View>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={styles.name}>{profile.name}</Text>
+          {profile.email && <Text style={styles.email}>{profile.email}</Text>}
           <Text style={styles.streak}>🔥 {profile.streak}-day streak</Text>
         </View>
       </View>
 
-      <Pressable style={styles.setRow}>
-        <Text style={styles.icon}>🪔</Text>
-        <Text style={styles.setLabel}>Personalisation</Text>
-        <Text style={styles.setValue}>
-          {TRADITION_LABELS[profile.tradition] ?? profile.tradition} · {REGION_LABELS[profile.region] ?? profile.region}
-        </Text>
-      </Pressable>
       <View style={[styles.setRow, styles.languageRow]}>
         <View style={styles.languageRowTop}>
           <Text style={styles.icon}>🌐</Text>
@@ -80,21 +57,33 @@ export default function ProfileScreen() {
         </View>
         <LanguageToggle />
       </View>
+
       <Pressable style={styles.setRow}>
         <Text style={styles.icon}>🔔</Text>
         <Text style={styles.setLabel}>Reminders</Text>
         <Text style={styles.setValue}>On</Text>
       </Pressable>
+
       <Pressable style={styles.setRow} onPress={() => navigation.navigate('Favourites')}>
         <Text style={styles.icon}>⭐</Text>
         <Text style={styles.setLabel}>Favourites</Text>
         <Text style={styles.setValue}>{profile.favouritesCount} ›</Text>
       </Pressable>
+
       <Pressable style={styles.setRow}>
         <Text style={styles.icon}>📿</Text>
         <Text style={styles.setLabel}>History & streaks</Text>
         <Text style={styles.setValue}>›</Text>
       </Pressable>
+
+      {user?.role === 'admin' && (
+        <Pressable style={styles.setRow} onPress={() => navigation.navigate('Admin')}>
+          <Text style={styles.icon}>⚙️</Text>
+          <Text style={styles.setLabel}>Admin Panel</Text>
+          <Text style={styles.setValue}>›</Text>
+        </Pressable>
+      )}
+
       <Pressable
         style={[styles.setRow, styles.lastRow, styles.signOutRow]}
         onPress={() =>
@@ -112,19 +101,9 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  loading: {
-    paddingTop: 120,
-    alignItems: 'center',
-  },
-  topbar: {
-    paddingVertical: 6,
-    marginBottom: 6,
-  },
-  title: {
-    fontFamily: fonts.serif,
-    fontSize: 18,
-    color: colors.ink,
-  },
+  loading: { paddingTop: 120, alignItems: 'center' },
+  topbar: { paddingVertical: 6, marginBottom: 6 },
+  title: { fontFamily: fonts.serif, fontSize: 18, color: colors.ink },
   profHead: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -139,22 +118,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatarText: {
-    color: '#f3d9a6',
-    fontFamily: fonts.sansBold,
-    fontSize: 22,
-  },
-  name: {
-    fontFamily: fonts.serif,
-    fontSize: 19,
-    color: colors.ink,
-  },
-  streak: {
-    fontFamily: fonts.sansSemiBold,
-    fontSize: 12.5,
-    color: colors.saffronDeep,
-    marginTop: 3,
-  },
+  avatarText: { color: '#f3d9a6', fontFamily: fonts.sansBold, fontSize: 22 },
+  name: { fontFamily: fonts.serif, fontSize: 19, color: colors.ink },
+  email: { fontFamily: fonts.sans, fontSize: 12, color: colors.muted, marginTop: 1 },
+  streak: { fontFamily: fonts.sansSemiBold, fontSize: 12.5, color: colors.saffronDeep, marginTop: 3 },
   setRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -164,39 +131,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.line,
   },
-  lastRow: {
-    borderBottomWidth: 0,
-  },
-  signOutRow: {
-    marginTop: 8,
-  },
-  signOutLabel: {
-    color: '#b71c1c',
-  },
-  languageRow: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    gap: 10,
-  },
-  languageRowTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  icon: {
-    width: 20,
-    textAlign: 'center',
-    fontSize: 15,
-  },
-  setLabel: {
-    fontFamily: fonts.sansMedium,
-    fontSize: 14,
-    color: colors.ink,
-  },
-  setValue: {
-    marginLeft: 'auto',
-    fontFamily: fonts.sans,
-    fontSize: 12.5,
-    color: colors.muted,
-  },
+  lastRow: { borderBottomWidth: 0 },
+  signOutRow: { marginTop: 8 },
+  signOutLabel: { color: '#b71c1c' },
+  languageRow: { flexDirection: 'column', alignItems: 'stretch', gap: 10 },
+  languageRowTop: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  icon: { width: 20, textAlign: 'center', fontSize: 15 },
+  setLabel: { fontFamily: fonts.sansMedium, fontSize: 14, color: colors.ink },
+  setValue: { marginLeft: 'auto', fontFamily: fonts.sans, fontSize: 12.5, color: colors.muted },
 });
